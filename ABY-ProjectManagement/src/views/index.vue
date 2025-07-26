@@ -283,79 +283,38 @@
             </div>
 
             <!-- Bütçe Progress Bar'ları -->
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                <!-- Sol Taraf - Büyük Progress Bar'lar -->
-                <div class="space-y-8">
-                    <!-- Toplam ELD Bütçesi -->
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-800 shadow-lg">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">2025 Toplam ELD Bütçesi</span>
+            <div class="space-y-8">
+                <!-- Üst - 2025 Gerçekleşen Toplam Teslimat Bütçesi -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-2xl border border-green-200 dark:border-green-800 shadow-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
                             </div>
-                            <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{{ formatMillion(budgetData.totalBudget) }}M TL</span>
+                            <span class="text-lg font-medium text-gray-700 dark:text-gray-300">2025 Gerçekleşen Toplam Teslimat Bütçesi</span>
                         </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 shadow-inner">
-                            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-6 rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-2" 
-                                 :style="{ width: progressPercentages.totalBudget + '%' }">
-                                <span class="text-white text-xs font-bold">{{ progressPercentages.totalBudget }}%</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            <span>Başlangıç</span>
-                            <span class="font-medium">Tam Bütçe Kapsamı</span>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">{{ formatMillion(budgetData.realizedBudget) }}M TL</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 shadow-inner">
+                        <div class="bg-gradient-to-r from-green-500 to-emerald-600 h-6 rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-2" 
+                             :style="{ width: progressPercentages.realizedTotal + '%' }">
+                            <span class="text-white text-xs font-bold">{{ progressPercentages.realizedTotal }}%</span>
                         </div>
                     </div>
-
-                    <!-- Gerçekleşen ELD Bütçesi -->
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-2xl border border-green-200 dark:border-green-800 shadow-lg">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">2025 Gerçekleşen ELD Bütçesi</span>
-                            </div>
-                            <span class="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">{{ formatMillion(budgetData.realizedBudget) }}M TL</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 shadow-inner">
-                            <div class="bg-gradient-to-r from-green-500 to-emerald-600 h-6 rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-2" 
-                                 :style="{ width: progressPercentages.realizedTotal + '%' }">
-                                <span class="text-white text-xs font-bold">{{ progressPercentages.realizedTotal }}%</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            <span>Başlangıç</span>
-                            <span class="font-medium">Toplam Bütçe Oranı</span>
-                        </div>
+                    <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        <span>Başlangıç</span>
+                        <span class="font-medium">Toplam Bütçe Oranı</span>
                     </div>
                 </div>
 
-                <!-- Sağ Taraf - Küçük Progress Bar'lar -->
-                <div class="space-y-6">
-                    <!-- Gerçekleşen ELD Bütçesi (Genel) -->
-                    <div class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 p-5 rounded-xl border border-teal-200 dark:border-teal-800 shadow-md">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">2025 Gerçekleşen ELD Bütçesi</span>
-                            <span class="text-sm font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">{{ formatMillion(budgetData.realizedBudget) }}M TL</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 shadow-inner">
-                            <div class="bg-gradient-to-r from-teal-500 to-cyan-600 h-4 rounded-full transition-all duration-1000 ease-out" 
-                                 :style="{ width: progressPercentages.realizedGeneral + '%' }"></div>
-                        </div>
-                        <div class="text-right text-xs text-gray-600 dark:text-gray-400 font-medium mt-1">{{ progressPercentages.realizedGeneral }}% (Kendi Kategorisi)</div>
-                    </div>
-
+                <!-- Alt - Yurtdışı ve Yurtiçi Bütçeleri -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Yurtdışı Bütçesi -->
                     <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-5 rounded-xl border border-orange-200 dark:border-orange-800 shadow-md">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yurtdışı Bütçesi</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yurtdışı Gerçekleşen Teslimat Bütçesi</span>
                             <span class="text-sm font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{{ formatMillion(budgetData.internationalBudget) }}M TL</span>
                         </div>
                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 shadow-inner">
@@ -366,9 +325,9 @@
                     </div>
 
                     <!-- Yurtiçi Bütçesi -->
-                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-5 rounded-xl border border-purple-200 dark:border-purple-800 shadow-md">
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-purple-900/20 p-5 rounded-xl border border-purple-200 dark:border-purple-800 shadow-md">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yurtiçi Bütçesi</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yurtiçi Gerçekleşen Teslimat Bütçesi</span>
                             <span class="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{{ formatMillion(budgetData.domesticBudget) }}M TL</span>
                         </div>
                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 shadow-inner">
@@ -461,7 +420,7 @@
                     </div>
                 </div>
 
-                <!-- Müdahale SLA Süresi Geçen -->
+                <!-- Müdahale SLA Süresi Geçen
                 <div class="bg-gradient-to-br from-yellow-500 via-yellow-600 to-amber-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-white">
                     <div class="text-center">
                         <div class="w-16 h-16 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -475,9 +434,24 @@
                             <div class="bg-white h-2 rounded-full transition-all duration-1000" :style="{ width: (notificationStats.interventionSLA / notificationStats.total * 100) + '%' }"></div>
                         </div>
                         <div class="text-xs text-yellow-100 mt-2 font-medium">{{ Math.round(notificationStats.interventionSLA / notificationStats.total * 100) }}% SLA Aşımı</div>
-                    </div>
+                    </div>        
                 </div>
-
+                 -->
+                  <div class="bg-gradient-to-br from-yellow-500 via-yellow-600 to-amber-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-white">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Müdahale SLA Süresi Geçen</h4>
+                        <div class="text-3xl font-bold text-white mb-3">178</div>
+                        <div class="w-full bg-white bg-opacity-20 rounded-full h-2">
+                            <div class="bg-white h-2 rounded-full transition-all duration-1000" :style="{ width: (178 / notificationStats.total * 100) + '%' }"></div>
+                        </div>
+                        <div class="text-xs text-yellow-100 mt-2 font-medium">{{ Math.round(178 / notificationStats.total * 100) }}% SLA Aşımı</div>
+                    </div>        
+                </div>
                 <!-- Onarım SLA Süresi Geçen -->
                 <div class="bg-gradient-to-br from-red-500 via-red-600 to-rose-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-white">
                     <div class="text-center">
@@ -487,11 +461,17 @@
                             </svg>
                         </div>
                         <h4 class="text-lg font-bold text-white mb-2">Onarım SLA Süresi Geçen</h4>
+                        <!--
                         <div class="text-3xl font-bold text-white mb-3">{{ formatNumber(notificationStats.repairSLA) }}</div>
+                        -->
+                        <div class="text-3xl font-bold text-white mb-3">22</div>
                         <div class="w-full bg-white bg-opacity-20 rounded-full h-2">
                             <div class="bg-white h-2 rounded-full transition-all duration-1000" :style="{ width: (notificationStats.repairSLA / notificationStats.total * 100) + '%' }"></div>
                         </div>
+                        <!--- Onarım SLA Aşımı Yüzdesi Excelden ceken
                         <div class="text-xs text-red-100 mt-2 font-medium">{{ Math.round(notificationStats.repairSLA / notificationStats.total * 100) }}% SLA Aşımı</div>
+                        -->
+                        <div class="text-xs text-red-100 mt-2 font-medium">{{ Math.round(22 / notificationStats.total * 100) }}% SLA Aşımı</div>  
                     </div>
                 </div>
             </div>
