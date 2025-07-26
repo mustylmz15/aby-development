@@ -468,11 +468,6 @@ const abySystemUrl = import.meta.env.VITE_ABY_SYSTEM_URL || 'http://localhost:51
 const abyProjectManagementUrl = import.meta.env.VITE_ABY_PROJECT_MANAGEMENT_URL || 'http://localhost:5175'
 const abyHaritaUrl = import.meta.env.VITE_ABY_HARITA_URL || 'http://localhost:5176'
 
-// Sistem login sayfasına yönlendirme
-const navigateToLogin = () => {
-    window.location.href = `${abySystemUrl}/auth/boxed-signin`
-}
-
 // Envanter kartına tıklandığında - ABY Sistema yönlendir
 const navigateToInventory = () => {
     window.location.href = `${abySystemUrl}/auth/boxed-signin`
