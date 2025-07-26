@@ -53,5 +53,10 @@ Bu proje Git ile version control altındadır. Değişiklik yapmadan önce:
 
 ## Katkıda Bulunanlar
 
-- [Adınız]
-- [Arkadaşınızın Adı]
+- Proje Lideri: ABY Team
+- Frontend Developer: [Eklenecek]
+- Backend Developer: [Eklenecek]
+
+## Proje Durumu
+
+Bu proje aktif geliştirme aşamasındadır.
