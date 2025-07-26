@@ -53,5 +53,10 @@ Bu proje Git ile version control altındadır. Değişiklik yapmadan önce:
 
 ## Katkıda Bulunanlar
 
-- [Adınız]
+- Yılmaz Özdemir (Frontend Developer)
 - [Arkadaşınızın Adı]
+
+## İletişim
+
+- Email: yilmaz.ozdemir@ogr.sakarya.edu.tr
+- GitHub: mustylmz15
