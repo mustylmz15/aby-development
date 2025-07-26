@@ -54,9 +54,14 @@ Bu proje Git ile version control altındadır. Değişiklik yapmadan önce:
 ## Katkıda Bulunanlar
 
 - Proje Lideri: ABY Team
-- Frontend Developer: [Eklenecek]
-- Backend Developer: [Eklenecek]
+- Frontend Developer: Yılmaz Özdemir
+- Backend Developer: [Arkadaşınızın Adı]
 
 ## Proje Durumu
 
 Bu proje aktif geliştirme aşamasındadır.
+
+## İletişim
+
+- Email: yilmaz.ozdemir@ogr.sakarya.edu.tr
+- GitHub: mustylmz15
