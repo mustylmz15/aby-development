@@ -15,7 +15,16 @@ function getUserIdFromToken() {
   
   try {
     const decoded = JSON.parse(atob(token.split('.')[1]));
-    return decoded.userId || decoded.id || decoded.sub;
+    console.log('JWT Token payload:', decoded); // Debug için
+    
+    // Farklı olası field isimlerini dene
+    const userId = decoded.userId || decoded.id || decoded.sub || decoded.user_id || decoded.ID;
+    
+    if (!userId) {
+      console.warn('Token\'da userId bulunamadı. Token payload:', decoded);
+    }
+    
+    return userId;
   } catch (error) {
     console.error('Token\'dan userId çıkarılırken hata:', error);
     return null;

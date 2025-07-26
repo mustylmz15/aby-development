@@ -52,8 +52,8 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'ana-ekran',
-        component: () => import('@/views/ana-giris/ana-giris.vue'),
-        meta: { layout: 'auth', title: 'ABY Yönetim Sistemi', requiresAuth: false }
+        redirect: '/anasayfa',
+        meta: { requiresAuth: false }
     },
     // Login
     {

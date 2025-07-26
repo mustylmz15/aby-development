@@ -19,7 +19,7 @@
         },
         "noImplicitAny": false,
         "allowJs": true,
-        "types": ["@intlify/unplugin-vue-i18n/messages"]
+        "types": ["@intlify/unplugin-vue-i18n/messages", "node"]
     },
     "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "YEDEK/WAREHOUSEYEDEK/manage_YEDEK.vue"],
     "references": [

@@ -15,13 +15,25 @@
                 class="relative w-full max-w-[870px] rounded-md bg-[linear-gradient(45deg,#fff9f9_0%,rgba(255,255,255,0)_25%,rgba(255,255,255,0)_75%,_#fff9f9_100%)] p-2 dark:bg-[linear-gradient(52.22deg,#0E1726_0%,rgba(14,23,38,0)_18.66%,rgba(14,23,38,0)_51.04%,rgba(14,23,38,0)_80.07%,#0E1726_100%)]"
             >
                 <div class="relative flex flex-col justify-center rounded-md bg-white/60 backdrop-blur-lg dark:bg-black/50 px-6 lg:min-h-[758px] py-20">
-                    <div class="absolute top-6 end-6">
+                    <div class="absolute top-6 start-6">
                         <div class="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark dark:bg-black">
                             <div>
                                 <img src="/assets/images/flags/TR.svg" alt="Türkiye" class="h-5 w-5 rounded-full object-cover" />
                             </div>
                             <div class="text-base font-bold uppercase">TR</div>
                         </div>
+                    </div>
+                    <div class="absolute top-6 end-6">
+                        <button 
+                            @click="goToPortal"
+                            class="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary px-3 py-1.5 text-white hover:bg-primary/80 transition-all duration-200"
+                            title="ABY Portal'a Git"
+                        >
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                            </svg>
+                            <span class="text-sm font-medium">Portal</span>
+                        </button>
                     </div>
                     <div class="mx-auto w-full max-w-[440px]">
                         <div class="mb-10">
@@ -50,6 +62,12 @@
     const router = useRouter();
     useMeta({ title: 'Login Boxed' });
     const store = useAppStore();
+    
+    // Portal'a yönlendirme fonksiyonu
+    const goToPortal = () => {
+        window.open('http://localhost:5173/', '_blank');
+    };
+    
     // multi language
     const i18n = reactive(useI18n());
     const changeLanguage = (item: any) => {

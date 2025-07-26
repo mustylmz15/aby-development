@@ -26,7 +26,7 @@ const userRoles = ref<string[]>([])
 
 // Polling interval (5 minutes)
 const POLLING_INTERVAL = 5 * 60 * 1000
-let pollingTimer: number | null = null
+let pollingTimer: NodeJS.Timeout | null = null
 
 export function useApprovalNotifications() {
   
@@ -46,11 +46,33 @@ export function useApprovalNotifications() {
   // Kullanıcı rollerini yükle
   const loadUserRoles = async () => {
     try {
+      // Önce token varlığını kontrol et
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('Token bulunamadı, roller yüklenemedi');
+        userRoles.value = [];
+        return;
+      }
+
       const detailedInfo = await userApi.getDetailedInfo()
       userRoles.value = detailedInfo.roles || []
-    } catch (error) {
+    } catch (error: any) {
       console.error('Kullanıcı rolleri yüklenirken hata:', error)
       userRoles.value = []
+      
+      // Eğer "User ID bulunamadı" hatası ise, localStorage'dan user rollerini almaya çalış
+      if (error?.message && error.message.includes('User ID bulunamadı')) {
+        try {
+          const userStr = localStorage.getItem('user');
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            userRoles.value = user.roles || [];
+            console.log('Roller localStorage\'dan yüklendi:', userRoles.value);
+          }
+        } catch (parseError) {
+          console.warn('localStorage\'dan user bilgisi okunamadı:', parseError);
+        }
+      }
     }
   }
 
