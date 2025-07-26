@@ -1,2 +1,10 @@
 @import 'vue3-perfect-scrollbar/style.css';
+/* @import 'tippy.js/dist/tippy.css'; */
+/* @import '@bhplugin/vue3-datatable/dist/style.css'; */
+/* @import 'file-upload-with-preview/dist/file-upload-with-preview.min.css'; */
+/* FullCalendar CSS - commented out as they are not working properly */
+/* @import '@fullcalendar/core/index.css'; */
+/* @import '@fullcalendar/daygrid/index.css'; */
+/* @import '@fullcalendar/timegrid/index.css'; */
+@import 'fullcalendar.css';
 @import 'tailwind.css';

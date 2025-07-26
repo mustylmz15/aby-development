@@ -19,6 +19,9 @@ import AltyukleniciRehberiView from '../views/alt-yuklenici/altyuklenici-rehberi
 import AltyukleniciDashboardView from '../views/alt-yuklenici/altyuklenici-dashboard.vue';
 import AltyukleniciRehberEkleView from '../views/alt-yuklenici/altyuklenici-rehber-ekle.vue';
 
+// Apps
+import CalendarView from '../views/apps/calendar.vue';
+
 const routes: RouteRecordRaw[] = [
     // dashboard
     { path: '/', name: 'home', component: HomeView },
@@ -45,6 +48,9 @@ const routes: RouteRecordRaw[] = [
     { path: '/yeni-proje', name: 'yeni-proje', component: ProjeYeniProjeView },
     { path: '/proje-gorev', name: 'proje-gorev', component: ProjeGorevView },
     //{ path: '/proje-rehber', name: 'proje-rehber', component: ProjeRehberView },
+    
+    // Apps
+    { path: '/apps/calendar', name: 'apps-calendar', component: CalendarView },
 ];
 
 const router = createRouter({

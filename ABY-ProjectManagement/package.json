@@ -9,8 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8", 
+    "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.1.8",
+    "@fullcalendar/vue3": "^6.1.8",
+    "@headlessui/vue": "^1.7.16",
     "@vueuse/head": "^2.0.0",
     "pinia": "^2.0.22",
+    "sweetalert2": "^11.7.32",
     "vue": "^3.2.37",
     "vue-height-collapsible": "^0.1.1",
     "vue-i18n": "^9.2.2",
