@@ -5,6 +5,7 @@ import appSetting from '@/app-setting';
 import HomeView from '../views/index.vue';
 import S1BildirimView from '../views/s1-bildirim.vue';
 import PersonelGorevView from '../views/personel-gorev.vue';
+import PersonelGorevTakvimiView from '../views/personel-gorev-takvimi.vue';
 import GorevOlusturView from '../views/gorev-olustur.vue';
 import ProjeTakipSistemiView from '../views/proje-takip-sistemi.vue';
 import ProjelerView from '../views/projects/projeler.vue';
@@ -31,6 +32,7 @@ const routes: RouteRecordRaw[] = [
     
     // task pages
     { path: '/personel-gorev', name: 'personel-gorev', component: PersonelGorevView },
+    { path: '/personel-gorev-takvimi', name: 'personel-gorev-takvimi', component: PersonelGorevTakvimiView },
     { path: '/gorev-olustur', name: 'gorev-olustur', component: GorevOlusturView },
     
     // personnel pages

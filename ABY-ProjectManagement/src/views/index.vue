@@ -492,15 +492,26 @@
                             </div>
                             <h3 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Görev Durumu</h3>
                         </div>
-                        <button @click="goToTasks" 
-                                class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium">
-                            <div class="flex items-center space-x-2">
-                                <span>Tümünü Gör</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </button>
+                        <div class="flex items-center space-x-4">
+                            <button @click="goToTasks" 
+                                    class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                    </svg>
+                                    <span>Tablo Görünümü</span>
+                                </div>
+                            </button>
+                            <button @click="goToTaskCalendar" 
+                                    class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>Takvim Görünümü</span>
+                                </div>
+                            </button>
+                        </div>
                     </div>
                     <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg inline-block">
                         3 Ana Kategori
@@ -661,6 +672,11 @@ const goToNotifications = () => {
 // Görev sayfasına yönlendir
 const goToTasks = () => {
     router.push('/personel-gorev');
+};
+
+// Personel Görev Takvimi'ne yönlendir
+const goToTaskCalendar = () => {
+    router.push('/personel-gorev-takvimi');
 };
 
 // Yüzdesel hesaplamalar - Toplam bütçeye göre

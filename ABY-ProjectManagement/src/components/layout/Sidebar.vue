@@ -108,6 +108,9 @@
                                     <li>
                                         <router-link to="/personel-gorev" @click="toggleMobileMenu">Personel Görev İşlemleri</router-link>
                                     </li>
+                                    <li>
+                                        <router-link to="/personel-gorev-takvimi" @click="toggleMobileMenu">Personel Görev Takvimi</router-link>
+                                    </li>
                                     <!-- görev girişi şimdilik gizlendi istenildiği taktirde aktif hale getirilecek
                                     <li>
                                         <router-link to="/gorev-olustur" @click="toggleMobileMenu">Görev Oluştur</router-link>

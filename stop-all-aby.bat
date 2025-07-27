@@ -2,13 +2,13 @@
 echo ABY Projelerini Durduruyor...
 echo.
 
-echo Node.js işlemleri sonlandırılıyor...
+echo Node.js islemleri sonlandiriliyor...
 taskkill /f /im node.exe 2>nul
 
-echo Vite işlemleri sonlandırılıyor...
+echo Vite islemleri sonlandiriliyor...
 taskkill /f /im vite.exe 2>nul
 
 echo.
-echo ✅ Tüm ABY projeleri durduruldu!
+echo ✅ Tum ABY projeleri durduruldu!
 echo.
 pause
