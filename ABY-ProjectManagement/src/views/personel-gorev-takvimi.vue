@@ -126,94 +126,98 @@
                                 >
                                     <icon-x class="w-4 h-4" />
                                 </button>
-                                <div class="text-base font-medium bg-gray-50 dark:bg-[#121c2c] ltr:pl-4 rtl:pr-4 py-2.5 ltr:pr-[40px] rtl:pl-[40px] border-b border-gray-200 dark:border-gray-700">
+                                <div class="text-lg font-semibold bg-gray-50 dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px] border-b border-gray-200 dark:border-gray-700">
                                     Görev Detayları
                                 </div>
-                                <div class="p-4">
-                                    <div v-if="selectedTask" class="space-y-3">
+                                <div class="p-5">
+                                    <div v-if="selectedTask" class="space-y-4">
                                         <!-- Personel -->
-                                        <div class="border-l-2 border-blue-500 pl-3">
-                                            <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Personel</label>
-                                            <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ selectedTask.extendedProps?.personelAdi }}</p>
-                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ selectedTask.extendedProps?.bolum }}</p>
+                                        <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                            <label class="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Personel</label>
+                                            <p class="text-lg font-bold text-gray-900 dark:text-white">{{ selectedTask.extendedProps?.personelAdi }}</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ selectedTask.extendedProps?.bolum }}</p>
                                         </div>
 
-                                        <!-- Görev Tipi -->
-                                        <div class="border-l-2 border-green-500 pl-3">
-                                            <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Görev Tipi</label>
-                                            <div class="mt-1">
-                                                <span 
-                                                    class="inline-block px-2 py-1 rounded-full text-xs font-medium text-white shadow-sm"
-                                                    :style="{
-                                                        backgroundColor: 
-                                                            selectedTask.extendedProps?.gorevTipi === 'Yurt İçi' 
-                                                                ? (selectedTask.extendedProps?.durum === 'Tamamlandı' ? 'rgb(34, 197, 94)' : 'rgb(245, 193, 59)')
-                                                                : selectedTask.extendedProps?.gorevTipi === 'Yurt Dışı'
-                                                                ? (selectedTask.extendedProps?.durum === 'Tamamlandı' ? 'rgb(59, 130, 246)' : 'rgb(239, 68, 68)')
-                                                                : 'rgb(156, 163, 175)'
-                                                    }"
-                                                >
-                                                    {{ selectedTask.extendedProps?.gorevTipi }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Durum -->
-                                        <div class="border-l-2 border-orange-500 pl-3">
-                                            <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Durum</label>
-                                            <div class="mt-1">
-                                                <span 
-                                                    class="inline-block px-2 py-1 rounded-full text-xs font-medium shadow-sm"
-                                                    :class="{
-                                                        'bg-info text-white': selectedTask.extendedProps?.durum === 'Aktif',
-                                                        'bg-warning text-white': selectedTask.extendedProps?.durum === 'Beklemede',
-                                                        'bg-secondary text-white': selectedTask.extendedProps?.durum === 'Tamamlandı'
-                                                    }"
-                                                >
-                                                    {{ selectedTask.extendedProps?.durum }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Tarihler -->
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div class="border-l-2 border-purple-500 pl-3">
-                                                <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Başlangıç</label>
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(selectedTask.start) }}</p>
-                                            </div>
-                                            <div class="border-l-2 border-purple-500 pl-3">
-                                                <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Bitiş</label>
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(selectedTask.end) }}</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Görev Süresi -->
-                                        <div class="border-l-2 border-red-500 pl-3">
-                                            <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Görev Süresi</label>
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ calculateTaskDuration(selectedTask) }} Gün</p>
-                                        </div>
-
-                                        <!-- Açıklama -->
-                                        <div class="border-l-2 border-gray-400 pl-3">
-                                            <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Açıklama</label>
-                                            <div class="mt-1 space-y-1">
-                                                <div class="flex">
-                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400 w-32">PYP Tanımı:</span>
-                                                    <span class="text-xs text-gray-700 dark:text-gray-300">{{ selectedTask.extendedProps?.pypTanimi || '-' }}</span>
+                                        <!-- Görev Bilgileri -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <!-- Görev Tipi -->
+                                            <div class="border-l-4 border-green-500 pl-4 py-2">
+                                                <label class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">Görev Tipi</label>
+                                                <div class="mt-2">
+                                                    <span 
+                                                        class="inline-block px-3 py-1.5 rounded-md text-sm font-medium text-white"
+                                                        :style="{
+                                                            backgroundColor: 
+                                                                selectedTask.extendedProps?.gorevTipi === 'Yurt İçi' 
+                                                                    ? (selectedTask.extendedProps?.durum === 'Tamamlandı' ? 'rgb(34, 197, 94)' : 'rgb(245, 193, 59)')
+                                                                    : selectedTask.extendedProps?.gorevTipi === 'Yurt Dışı'
+                                                                    ? (selectedTask.extendedProps?.durum === 'Tamamlandı' ? 'rgb(59, 130, 246)' : 'rgb(239, 68, 68)')
+                                                                    : 'rgb(156, 163, 175)'
+                                                        }"
+                                                    >
+                                                        {{ selectedTask.extendedProps?.gorevTipi }}
+                                                    </span>
                                                 </div>
-                                                <div class="flex">
-                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400 w-32">Seyahat Nedeni:</span>
-                                                    <span class="text-xs text-gray-700 dark:text-gray-300">{{ selectedTask.extendedProps?.seyahatNedeni || '-' }}</span>
+                                            </div>
+
+                                            <!-- Durum -->
+                                            <div class="border-l-4 border-orange-500 pl-4 py-2">
+                                                <label class="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wide">Durum</label>
+                                                <div class="mt-2">
+                                                    <span 
+                                                        class="inline-block px-3 py-1.5 rounded-md text-sm font-medium"
+                                                        :class="{
+                                                            'bg-emerald-500 text-white': selectedTask.extendedProps?.durum === 'Aktif',
+                                                            'bg-amber-500 text-white': selectedTask.extendedProps?.durum === 'Beklemede',
+                                                            'bg-slate-500 text-white': selectedTask.extendedProps?.durum === 'Tamamlandı'
+                                                        }"
+                                                    >
+                                                        {{ selectedTask.extendedProps?.durum }}
+                                                    </span>
                                                 </div>
-                                                <div class="flex">
-                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400 w-32">
+                                            </div>
+                                        </div>
+
+                                        <!-- Tarih Bilgileri -->
+                                        <div class="border-l-4 border-purple-500 pl-4 py-2">
+                                            <label class="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">Tarih Bilgileri</label>
+                                            <div class="grid grid-cols-3 gap-4 mt-2">
+                                                <div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Başlangıç</p>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(selectedTask.start) }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Bitiş</p>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(selectedTask.end) }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Süre</p>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ calculateTaskDuration(selectedTask) }} Gün</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Görev Detayları -->
+                                        <div class="border-l-4 border-gray-500 pl-4 py-2">
+                                            <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Görev Detayları</label>
+                                            <div class="mt-2 space-y-2">
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">İlgili Proje:</span>
+                                                    <span class="text-sm text-gray-900 dark:text-white ml-2">{{ selectedTask.extendedProps?.ilgiliProje || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Seyahat Nedeni:</span>
+                                                    <span class="text-sm text-gray-900 dark:text-white ml-2">{{ selectedTask.extendedProps?.seyahatNedeni || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                                                         {{ selectedTask.extendedProps?.gorevTipi === 'Yurt Dışı' ? 'Gidilen Ülke:' : 'Gidilen İl:' }}
                                                     </span>
-                                                    <span class="text-xs text-gray-700 dark:text-gray-300">{{ selectedTask.extendedProps?.gidilenIl || '-' }}</span>
+                                                    <span class="text-sm text-gray-900 dark:text-white ml-2">{{ selectedTask.extendedProps?.gidilenIl || '-' }}</span>
                                                 </div>
-                                                <div class="flex">
-                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400 w-32">Taşıt türü:</span>
-                                                    <span class="text-xs text-gray-700 dark:text-gray-300">{{ selectedTask.extendedProps?.tasitTuru || '-' }}</span>
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Taşıt Türü:</span>
+                                                    <span class="text-sm text-gray-900 dark:text-white ml-2">{{ selectedTask.extendedProps?.tasitTuru || '-' }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -416,14 +420,14 @@ const convertTasksToEvents = () => {
             const bolum = task['Bölüm'] || '';
             const title = bolum ? `${bolum} - ${personelAdi}` : personelAdi;
             
-            // Etkinlik Açıklaması: PYP Tanımı + Seyahat Nedeni Tanımı + Gidilen İl/Ülke + Taşıt türü Tanımı
-            const pypTanimi = task['PYP Tanımı'] || '';
+            // Etkinlik Açıklaması: İlgili Proje + Seyahat Nedeni Tanımı + Gidilen İl/Ülke + Taşıt türü Tanımı
+            const ilgiliProje = task['İlgili Proje'] || task['Proje Adı'] || task['PYP Tanımı'] || '';
             const seyahatNedeni = task['Seyahat Nedeni Tanımı'] || '';
             // Yurt içi için 'Gidilen İl', yurt dışı için 'Gidilen Ülke' alanını kontrol et
             const gidilenIl = task['Gidilen İl'] || task['Gidilen Ülke'] || '';
             const tasitTuru = task['Taşıt türü Tanımı'] || '';
             
-            const description = [pypTanimi, seyahatNedeni, gidilenIl, tasitTuru]
+            const description = [ilgiliProje, seyahatNedeni, gidilenIl, tasitTuru]
                 .filter(item => item && item.trim())
                 .join(' + ');
             
@@ -481,7 +485,7 @@ const convertTasksToEvents = () => {
                     durum: durum,
                     personelAdi: personelAdi,
                     bolum: bolum,
-                    pypTanimi: pypTanimi,
+                    ilgiliProje: ilgiliProje,
                     seyahatNedeni: seyahatNedeni,
                     gidilenIl: gidilenIl, // Bu artık hem İl hem Ülke içerebilir
                     tasitTuru: tasitTuru,
@@ -660,13 +664,13 @@ const filterEvents = () => {
             const bolum = task['Bölüm'] || '';
             const title = bolum ? `${bolum} - ${personelAdi}` : personelAdi;
             
-            const pypTanimi = task['PYP Tanımı'] || '';
+            const ilgiliProje = task['İlgili Proje'] || task['Proje Adı'] || task['PYP Tanımı'] || '';
             const seyahatNedeni = task['Seyahat Nedeni Tanımı'] || '';
             // Yurt içi için 'Gidilen İl', yurt dışı için 'Gidilen Ülke' alanını kontrol et
             const gidilenIl = task['Gidilen İl'] || task['Gidilen Ülke'] || '';
             const tasitTuru = task['Taşıt türü Tanımı'] || '';
             
-            const description = [pypTanimi, seyahatNedeni, gidilenIl, tasitTuru]
+            const description = [ilgiliProje, seyahatNedeni, gidilenIl, tasitTuru]
                 .filter(item => item && item.trim())
                 .join(' + ');
             
@@ -723,7 +727,7 @@ const filterEvents = () => {
                     durum: durum,
                     personelAdi: personelAdi,
                     bolum: bolum,
-                    pypTanimi: pypTanimi,
+                    ilgiliProje: ilgiliProje,
                     seyahatNedeni: seyahatNedeni,
                     gidilenIl: gidilenIl, // Bu artık hem İl hem Ülke içerebilir
                     tasitTuru: tasitTuru,
