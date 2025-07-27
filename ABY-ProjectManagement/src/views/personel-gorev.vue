@@ -165,6 +165,16 @@
                                       }">
                                     {{ row[header] || '-' }}
                                 </span>
+                                <span v-else-if="header === 'İlgili Proje'" 
+                                      :class="{
+                                        'badge bg-cyan text-dark': row[header] && row[header] !== '-',
+                                        'text-gray-400': !row[header] || row[header] === '-'
+                                      }"
+                                      :title="row[header] && row[header] !== '-' ? row[header] : 'Proje eşleştirilemedi'">
+                                    {{ row[header] && row[header] !== '-' ? 
+                                        (row[header].length > 50 ? row[header].substring(0, 50) + '...' : row[header]) : 
+                                        'Proje Bulunamadı' }}
+                                </span>
                                 <span v-else>{{ row[header] || '-' }}</span>
                             </td>
                         </tr>
@@ -513,5 +523,15 @@ onMounted(() => {
 .dark .bg-purple {
     background-color: rgb(107 33 168);
     color: rgb(243 232 255);
+}
+
+.bg-cyan {
+    background-color: rgb(207 250 254);
+    color: rgb(21 94 117);
+}
+
+.dark .bg-cyan {
+    background-color: rgb(21 94 117);
+    color: rgb(207 250 254);
 }
 </style>

@@ -703,6 +703,9 @@ export const useExcel = () => {
         try {
             console.log('=== Loading Complete Task Data ===');
             
+            // Proje eşleştirme verilerini yükle
+            const projectMapping = await getProjectMapping();
+            
             let allTaskData: any[] = [];
             let combinedHeaders: string[] = [];
             
@@ -721,7 +724,7 @@ export const useExcel = () => {
                 
                 // Header'lara görev tipi sütunu ekle
                 if (combinedHeaders.length === 0) {
-                    combinedHeaders = ['Görev Tipi', ...domesticHeaders];
+                    combinedHeaders = ['Görev Tipi', 'İlgili Proje', ...domesticHeaders];
                 }
                 
                 // Her satıra görev tipini ekle
@@ -731,6 +734,17 @@ export const useExcel = () => {
                         'Görev Tipi': 'Yurt İçi',
                         originalRowIndex: index
                     };
+                    
+                    // PYP kodunu bul ve proje ismini eşleştir
+                    let pypCode = '';
+                    domesticHeaders.forEach((header, colIndex) => {
+                        if (header && (header.toLowerCase().includes('pyp') && !header.toLowerCase().includes('tanım'))) {
+                            pypCode = row[colIndex] || '';
+                        }
+                    });
+                    
+                    // İlgili proje ismini ekle
+                    rowData['İlgili Proje'] = getPypToProjectName(pypCode, projectMapping);
                     
                     // Her sütun için veri ekle
                     domesticHeaders.forEach((header, colIndex) => {
@@ -832,6 +846,17 @@ export const useExcel = () => {
                         originalRowIndex: index
                     };
                     
+                    // PYP kodunu bul ve proje ismini eşleştir
+                    let pypCode = '';
+                    internationalHeaders.forEach((header, colIndex) => {
+                        if (header && (header.toLowerCase().includes('pyp') && !header.toLowerCase().includes('tanım'))) {
+                            pypCode = row[colIndex] || '';
+                        }
+                    });
+                    
+                    // İlgili proje ismini ekle
+                    rowData['İlgili Proje'] = getPypToProjectName(pypCode, projectMapping);
+                    
                     // Her sütun için veri ekle
                     internationalHeaders.forEach((header, colIndex) => {
                         const cellValue = row[colIndex];
@@ -924,7 +949,13 @@ export const useExcel = () => {
                 });
             });
             
-            const finalHeaders = Array.from(allHeaders);
+            // Header sıralaması: Görev Tipi, İlgili Proje, diğerleri
+            const finalHeaders = ['Görev Tipi', 'İlgili Proje'];
+            Array.from(allHeaders).forEach(header => {
+                if (header !== 'Görev Tipi' && header !== 'İlgili Proje') {
+                    finalHeaders.push(header);
+                }
+            });
             
             console.log('Final headers:', finalHeaders);
             console.log('Total task records:', allTaskData.length);
@@ -1077,6 +1108,52 @@ export const useExcel = () => {
         }
     };
 
+    // PYP kodlarını proje isimlerine eşleştiren fonksiyon
+    const getProjectMapping = async (): Promise<Record<string, string>> => {
+        try {
+            console.log('=== Loading Project Mapping Data ===');
+            
+            const projectWorkbook = await readExcelFile('/excel/PROJE_LİSTESİ_UGES_ÜDM_2025_v3.xlsx');
+            const projectSheetName = projectWorkbook.SheetNames[0];
+            const projectWorksheet = projectWorkbook.Sheets[projectSheetName];
+            const projectJsonData = XLSX.utils.sheet_to_json(projectWorksheet, { header: 1, defval: '' });
+            
+            const projectMapping: Record<string, string> = {};
+            
+            // Header satırını atla ve veri satırlarını işle
+            const projectDataRows = projectJsonData.slice(1) as any[][];
+            
+            projectDataRows.forEach(row => {
+                const pypCode = row[0]; // A sütunu - PYP Kodu
+                const projectName = row[1]; // B sütunu - Proje Adı
+                
+                if (pypCode && projectName) {
+                    // PYP kodunun "/" öncesi kısmını al
+                    const pypPrefix = String(pypCode).split('/')[0];
+                    projectMapping[pypPrefix] = String(projectName);
+                }
+            });
+            
+            console.log('Project mapping loaded:', Object.keys(projectMapping).length, 'projects');
+            return projectMapping;
+            
+        } catch (error) {
+            console.error('Proje eşleştirme verileri yüklenemedi:', error);
+            return {};
+        }
+    };
+
+    // PYP kodunu proje ismine çeviren fonksiyon
+    const getPypToProjectName = (pypCode: string, projectMapping: Record<string, string>): string => {
+        if (!pypCode) return '-';
+        
+        // PYP kodunun "/" öncesi kısmını al
+        const pypPrefix = String(pypCode).split('/')[0];
+        
+        // Eşleştirme tablosunda ara
+        return projectMapping[pypPrefix] || '-';
+    };
+
     return {
         readExcelFile,
         parseNotificationData,
@@ -1086,6 +1163,8 @@ export const useExcel = () => {
         parseTaskData,
         loadDashboardData,
         getTableData,
-        getTaskTableData
+        getTaskTableData,
+        getProjectMapping,
+        getPypToProjectName
     };
 };
