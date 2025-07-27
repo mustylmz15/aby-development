@@ -154,6 +154,7 @@ import { ref, watch, reactive, computed } from 'vue';
 import type { User, Assignment } from './roleTypes';
 import { RESOURCE_API_MAP } from './resourceApiMap';
 import Swal from 'sweetalert2';
+import { usersApi } from '../api/users-api';
 
 const props = defineProps<{
   visible: boolean;
@@ -222,14 +223,15 @@ watch(() => multiAssign.resourceType, async (type) => {
   if (!type || !RESOURCE_API_MAP[type]) return;
   isLoadingResources.value = true;
   try {
-    const res = await fetch(RESOURCE_API_MAP[type], {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await res.json();
-    resourceOptions.value = Array.isArray(data) ? data : (data.data || []);
+    if (type === 'PROJECT') {
+      const data = await usersApi.getProjects();
+      resourceOptions.value = Array.isArray(data) ? data : [];
+    } else if (type === 'WAREHOUSE') {
+      const data = await usersApi.getWarehouses();
+      resourceOptions.value = Array.isArray(data) ? data : [];
+    } else {
+      resourceOptions.value = [];
+    }
   } catch (e) {
     resourceOptions.value = [];
   }
@@ -241,19 +243,7 @@ async function assignMultiple() {
   // Sadece PROJECT_USER veya PROJE_ADMINI gibi roller için çoklu atama örneği
   if (multiAssign.resourceType === 'PROJECT') {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/assign-projects`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: props.user.id,
-          projectIds: multiAssign.selectedResourceIds,
-          role: multiAssign.role
-        })
-      });
-      if (!response.ok) throw new Error('Atama başarısız!');
+      await usersApi.assignProjects(props.user.id, multiAssign.selectedResourceIds, multiAssign.role);
       await Swal.fire({
         icon: 'success',
         title: 'Başarılı!',
@@ -287,19 +277,7 @@ async function assignMultiple() {
     }
   } else if (multiAssign.resourceType === 'WAREHOUSE') {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/assign-warehouses`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: props.user.id,
-          warehouseIds: multiAssign.selectedResourceIds,
-          role: multiAssign.role
-        })
-      });
-      if (!response.ok) throw new Error('Atama başarısız!');
+      await usersApi.assignWarehouses(props.user!.id, multiAssign.selectedResourceIds, multiAssign.role);
       await Swal.fire({
         icon: 'success',
         title: 'Başarılı!',
@@ -341,14 +319,7 @@ async function removeAssignment(assignment: Assignment) {
   if (assignment.id) {
     deletingAssignmentId.value = assignment.id;
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/assignments/${assignment.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      if (!response.ok) throw new Error('Rol silme başarısız!');
+      await usersApi.deleteAssignment(assignment.id);
     } catch (e) {
       await Swal.fire({
         icon: 'error',
@@ -389,13 +360,7 @@ const roleOptions = ref<string[]>([]);
 // Enum rolleri API'den çek
 async function fetchRoles() {
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/types/enums`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await res.json();
+    const data = await usersApi.getEnums();
     // AssignmentRole alanı array ise ata
     if (data && Array.isArray(data.AssignmentRole)) {
       roleOptions.value = data.AssignmentRole;

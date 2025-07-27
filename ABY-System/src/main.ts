@@ -41,5 +41,8 @@ app.component('Popper', Popper);
 app.mount('#app');
 
 // App mount edildikten sonra interceptor'ları başlat
-setupApiInterceptors();
-startTokenCheck();
+// GEÇICI: Modüler geçiş sırasında kapatıldı
+// setupApiInterceptors();
+// startTokenCheck();
+
+console.log('🔧 Global API interceptor geçici olarak devre dışı - Modüler geçiş testi');
