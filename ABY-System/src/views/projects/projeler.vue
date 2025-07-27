@@ -38,25 +38,12 @@ import ProjectAddButton from './project-companents/ProjectAddButton.vue';
 import ProjectTable from './project-companents/ProjectTable.vue';
 import ProjectEditModal from './project-companents/ProjectEditModal.vue';
 import ProjectDetailModal from './project-companents/ProjectDetailModal.vue';
+import { projectsApi, type Project } from './api/projects-api';
 
 const projects = ref<any[]>([]);
-
-// .env dosyasından VITE_API_BASE_URL alınır
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/v1/projects`;
-// Token localStorage'dan dinamik alınır
-function getToken() {
-  return localStorage.getItem('token') || '';
-}
 async function fetchProjects() {
   try {
-    const res = await fetch(API_URL, {
-      headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!res.ok) throw new Error('Projeler alınamadı');
-    const data = await res.json();
+    const data = await projectsApi.getProjects();
     // API'den gelen status'u Türkçeleştir
     projects.value = data.map((p: any) => ({
       ...p,
@@ -65,7 +52,7 @@ async function fetchProjects() {
       updatedAt: p.updatedAt ? new Date(p.updatedAt).toLocaleString('tr-TR') : '',
     }));
   } catch (err) {
-    console.error(err);
+    console.error('Projeler yüklenirken hata:', err);
   }
 }
 
@@ -97,79 +84,41 @@ function onCloseDetailModal() {
 async function onDeleteProject(project: any) {
   if (confirm(`${project.name} silinsin mi?`)) {
     try {
-      const res = await fetch(`${API_URL}/${project.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!res.ok) throw new Error('Silme işlemi başarısız');
+      await projectsApi.deleteProject(project.id);
       projects.value = projects.value.filter((p) => p.id !== project.id);
     } catch (err) {
       alert('Silme işlemi başarısız!');
-      console.error(err);
+      console.error('Proje silme hatası:', err);
     }
   }
 }
 
 async function onSaveProject(project: any) {
-  if (project.id) {
-    // Düzenleme
-    try {
-      const payload = {
-        code: project.code,
-        name: project.name,
-        description: project.description,
-        status: project.status === 'Aktif' ? 'ACTIVE' : 'PLANNING',
-        organizationId: project.organizationId,
-        startDate: project.startDate ? new Date(project.startDate).toISOString() : null,
-        endDate: project.endDate ? new Date(project.endDate).toISOString() : null,
-        sla: typeof project.sla === 'number' ? project.sla : 0
-      };
-      const res = await fetch(`${API_URL}/${project.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error('Proje güncellenemedi');
-      await fetchProjects();
-    } catch (err) {
-      alert('Proje güncellenemedi!');
-      console.error(err);
+  const payload: Partial<Project> = {
+    code: project.code,
+    name: project.name,
+    description: project.description,
+    status: project.status === 'Aktif' ? 'ACTIVE' : (project.id ? 'PLANNING' : 'PASSIVE'),
+    organizationId: project.organizationId,
+    startDate: project.startDate ? new Date(project.startDate).toISOString() : null,
+    endDate: project.endDate ? new Date(project.endDate).toISOString() : null,
+    sla: typeof project.sla === 'number' ? project.sla : 0
+  };
+
+  try {
+    if (project.id) {
+      // Düzenleme
+      await projectsApi.updateProject(project.id, payload);
+    } else {
+      // Yeni ekleme
+      await projectsApi.createProject(payload as Omit<Project, 'id' | 'createdAt' | 'updatedAt'>);
     }
-  } else {
-    // Yeni ekleme
-    try {
-      const payload = {
-        code: project.code,
-        name: project.name,
-        description: project.description,
-        status: project.status === 'Aktif' ? 'ACTIVE' : 'PASSIVE',
-        organizationId: project.organizationId,
-        startDate: project.startDate ? new Date(project.startDate).toISOString() : null,
-        endDate: project.endDate ? new Date(project.endDate).toISOString() : null,
-        sla: typeof project.sla === 'number' ? project.sla : 0
-      };
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error('Proje eklenemedi');
-      await fetchProjects(); // Listeyi güncelle
-    } catch (err) {
-      alert('Proje eklenemedi!');
-      console.error(err);
-    }
+    await fetchProjects(); // Listeyi güncelle
+    editModalVisible.value = false;
+  } catch (err) {
+    alert(project.id ? 'Proje güncellenemedi!' : 'Proje eklenemedi!');
+    console.error('Proje kaydetme hatası:', err);
   }
-  editModalVisible.value = false;
 }
 
 function onCloseEditModal() {

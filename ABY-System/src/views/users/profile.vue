@@ -282,6 +282,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import Swal from 'sweetalert2';
+import { usersApi, type User, type PasswordChangeData } from './api/users-api';
 
 const activeTab = ref<'profile' | 'settings'>('profile');
 const user = reactive<any>({});
@@ -320,26 +321,7 @@ onMounted(async () => {
 // Kullanıcı profili çekme fonksiyonu
 const fetchUserProfile = async (userId: string) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('Token bulunamadı');
-      return;
-    }
-
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const userData = await response.json();
-    console.log('API\'den gelen kullanıcı bilgileri:', userData);
+    const userData = await usersApi.getUserProfile(userId);
     
     // Kullanıcı bilgilerini güncelle
     Object.assign(user, userData);
@@ -349,6 +331,12 @@ const fetchUserProfile = async (userId: string) => {
     
   } catch (error) {
     console.error('Kullanıcı profili çekilirken hata:', error);
+    await Swal.fire({
+      icon: 'error',
+      title: 'Hata!',
+      text: 'Kullanıcı profili yüklenemedi',
+      padding: '2em',
+    });
   }
 };
 
@@ -408,39 +396,12 @@ async function updatePassword() {
   isLoading.value = true;
 
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.');
-    }
-
-    const payload = {
-      oldPassword: passwordForm.currentPassword,  // API'nin beklediği alan adı
+    const passwordData: PasswordChangeData = {
+      oldPassword: passwordForm.currentPassword,
       newPassword: passwordForm.newPassword
     };
 
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/change-password`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      
-      // Özel hata mesajları
-      if (response.status === 400) {
-        throw new Error(errorData.message || 'Mevcut şifre yanlış veya yeni şifre geçersiz');
-      } else if (response.status === 401) {
-        throw new Error('Mevcut şifre yanlış');
-      } else if (response.status === 403) {
-        throw new Error('Bu işlem için yetkiniz bulunmuyor');
-      } else {
-        throw new Error(errorData.message || 'Şifre güncelleme başarısız oldu');
-      }
-    }
+    await usersApi.changePassword(passwordData);
 
     // Başarılı işlem
     await Swal.fire({

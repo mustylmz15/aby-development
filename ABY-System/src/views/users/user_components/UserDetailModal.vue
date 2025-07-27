@@ -161,17 +161,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import Swal from 'sweetalert2';
+import { usersApi } from '../api/users-api';
 
 const props = defineProps<{ 
   visible: boolean; 
   user: any; 
 }>();
 
-const emit = defineEmits<{
-  close: () => void;
-  deleted: () => void;
-  projectAssignmentsDeleted: (projectIds: string[]) => void;
-}>();
+const emit = defineEmits(['close', 'deleted', 'projectAssignmentsDeleted']);
 
 // Proje ve depo isimlerini tutacak state'ler
 const projectNames = ref<Record<string, string>>({});
@@ -202,25 +199,16 @@ async function fetchProjectNames() {
 
   isLoadingNames.value = true;
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/projects`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
+    const projects = await usersApi.getProjects();
+    const projectsArray = Array.isArray(projects) ? projects : [];
+    
+    const nameMap: Record<string, string> = {};
+    projectsArray.forEach((project: any) => {
+      if (project.id && (project.name || project.title)) {
+        nameMap[project.id] = project.name || project.title;
       }
     });
-    
-    if (response.ok) {
-      const projects = await response.json();
-      const projectsArray = Array.isArray(projects) ? projects : (projects.data || []);
-      
-      const nameMap: Record<string, string> = {};
-      projectsArray.forEach((project: any) => {
-        if (project.id && (project.name || project.title)) {
-          nameMap[project.id] = project.name || project.title;
-        }
-      });
-      projectNames.value = nameMap;
-    }
+    projectNames.value = nameMap;
   } catch (error) {
     console.warn('Proje isimleri getirilemedi:', error);
   } finally {
@@ -234,25 +222,16 @@ async function fetchWarehouseNames() {
   if (warehouseIds.length === 0) return;
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/warehouses`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
+    const warehouses = await usersApi.getWarehouses();
+    const warehousesArray = Array.isArray(warehouses) ? warehouses : [];
+    
+    const nameMap: Record<string, string> = {};
+    warehousesArray.forEach((warehouse: any) => {
+      if (warehouse.id && (warehouse.name || warehouse.title)) {
+        nameMap[warehouse.id] = warehouse.name || warehouse.title;
       }
     });
-    
-    if (response.ok) {
-      const warehouses = await response.json();
-      const warehousesArray = Array.isArray(warehouses) ? warehouses : (warehouses.data || []);
-      
-      const nameMap: Record<string, string> = {};
-      warehousesArray.forEach((warehouse: any) => {
-        if (warehouse.id && (warehouse.name || warehouse.title)) {
-          nameMap[warehouse.id] = warehouse.name || warehouse.title;
-        }
-      });
-      warehouseNames.value = nameMap;
-    }
+    warehouseNames.value = nameMap;
   } catch (error) {
     console.warn('Depo isimleri getirilemedi:', error);
   }
@@ -298,16 +277,7 @@ async function deleteSelectedProjects() {
     
     if (!result.isConfirmed) return;
     
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/remove-project-assignments`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ userId: props.user.id, warehouseIds: selectedProjectIds.value })
-    });
-    
-    if (!response.ok) throw new Error('Projeler silinemedi!');
+    await usersApi.removeProjectAssignments(props.user.id, selectedProjectIds.value);
     
     // Emit'i try-catch içinde koruyalım
     try {
@@ -358,16 +328,7 @@ async function deleteSelectedWarehouses() {
     
     if (!result.isConfirmed) return;
     
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/remove-warehouse-assignments`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ userId: props.user.id, warehouseIds: selectedWarehouseIds.value })
-    });
-    
-    if (!response.ok) throw new Error('Depolar silinemedi!');
+    await usersApi.removeWarehouseAssignments(props.user.id, selectedWarehouseIds.value);
     
     selectedWarehouseIds.value = [];
     

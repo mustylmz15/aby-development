@@ -72,7 +72,7 @@
       </template>
     </RoleUserTable>
 
-    <RoleEditModal :visible="showEditModal" :user="selectedUser" @close="closeEditModal" @save="saveEdit" />
+    <RoleEditModal :visible="showEditModal" :user="selectedUser as any" @close="closeEditModal" @save="saveEdit" />
 
 <UserDetailModal 
   :visible="showDetailModal" 
@@ -116,7 +116,7 @@ function openAssignmentDeleteModal(user: User) {
 
 async function onAssignmentDeleted(assignmentIds: string[]) {
   // Silinen assignment'ları localden çıkar
-  if (selectedUserForDelete.value) {
+  if (selectedUserForDelete.value && selectedUserForDelete.value.assignments) {
     selectedUserForDelete.value.assignments = selectedUserForDelete.value.assignments.filter(a => a.id && !assignmentIds.includes(a.id));
   }
   showDeleteModal.value = false;
@@ -129,8 +129,8 @@ import RoleBadge from './user_components/RoleBadge.vue';
 import RoleActions from './user_components/RoleActions.vue';
 import UserAvatarName from './user_components/UserAvatarName.vue';
 import RoleEditModal from './user_components/RoleEditModal.vue';
-import type { User, Assignment } from './user_components/roleTypes';
 import { RESOURCE_API_MAP } from './user_components/resourceApiMap';
+import { usersApi, type User, type Assignment } from './api/users-api';
 
 const users = ref<User[]>([]);
 const showEditModal = ref(false);
@@ -156,10 +156,6 @@ const isLastAssignment = (assignments: Assignment[], assignment: Assignment) => 
 };
 
 
-// Token localStorage'dan dinamik alınır
-function getToken() {
-  return localStorage.getItem('token') || '';
-}
 // Tek bir assignment'ı silen fonksiyon
 async function handleDeleteAssignment(assignment: Assignment) {
   if (!assignment.id) return;
@@ -179,15 +175,7 @@ async function handleDeleteAssignment(assignment: Assignment) {
   
   if (!result.isConfirmed) return;
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/assignments/${assignment.id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json'
-        }
-      });
-    if (!response.ok) throw new Error('Rol silinemedi!');
+    await usersApi.deleteAssignment(assignment.id);
     await fetchUsers();
     await Swal.fire({
       icon: 'success',
@@ -210,13 +198,35 @@ async function handleDeleteAssignment(assignment: Assignment) {
 }
 
 const fetchUsers = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users`, {
-    headers: {
-      'Authorization': `Bearer ${getToken()}`,
-      'Content-Type': 'application/json'
+  try {
+    // Önce rol kontrolü yap
+    if (!usersApi.hasRole('ADMIN') && !usersApi.hasRole('USER_MANAGER')) {
+      console.warn('Kullanıcı yönetimi için yeterli yetki yok');
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Yetkisiz Erişim',
+        text: 'Bu sayfaya erişim yetkiniz bulunmuyor.',
+        padding: '2em',
+        customClass: { popup: 'sweet-alerts' }
+      });
+      return;
+    }
+
+    // Kullanıcı bilgilerini güncelle
+    await usersApi.refreshCurrentUserInfo();
+    
+    const data = await usersApi.getAllUsers();
+    users.value = data;
+    // assignments'tan unique roles array'ini güncelle
+    users.value.forEach(user => {
+      if (user.assignments && Array.isArray(user.assignments)) {
+        const uniqueRoles = [...new Set(user.assignments.map(a => a.role))];
+        user.roles = uniqueRoles;
+    } else {
+      user.roles = [];
     }
   });
-  if (!response.ok) {
+  } catch (error) {
     await Swal.fire({
       icon: 'error',
       title: 'Hata!',
@@ -226,18 +236,7 @@ const fetchUsers = async () => {
       confirmButtonText: 'Tamam'
     });
     users.value = [];
-    return;
   }
-  users.value = await response.json();
-  // assignments'tan unique roles array'ini güncelle
-  users.value.forEach(user => {
-    if (user.assignments && Array.isArray(user.assignments)) {
-      const uniqueRoles = [...new Set(user.assignments.map(a => a.role))];
-      user.roles = uniqueRoles;
-    } else {
-      user.roles = [];
-    }
-  });
 };
 
 function openEditModal(user: User) {
@@ -256,15 +255,9 @@ async function saveEdit(assignments: Assignment[], roles?: string[]) {
     const safeRoles = Array.isArray(roles) ? roles : safeAssignments.map(a => a.role);
     const payload = { userId: selectedUser.value.id, assignments: safeAssignments, roles: safeRoles };
     console.log('KAYDET ile backend\'e gönderilen veri:', payload);
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/assign-roles`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!response.ok) throw new Error('Rol güncelleme başarısız!');
+    if (selectedUser.value?.id) {
+      await usersApi.assignRoles(selectedUser.value.id, safeRoles);
+    }
     // Modalı kapatmadan önce localdeki user'ın assignments ve roles'unu güncelle
     if (selectedUser.value) {
       selectedUser.value.assignments = safeAssignments;
@@ -280,28 +273,18 @@ async function saveEdit(assignments: Assignment[], roles?: string[]) {
 async function fetchResourceNames() {
   // Projeler
   try {
-    const projectRes = await fetch(RESOURCE_API_MAP.PROJECT, {
-      headers: { 'Authorization': `Bearer ${getToken()}` }
-    });
-    if (projectRes.ok) {
-      const projects = await projectRes.json();
-      // id -> name map
-      projectMap.value = Array.isArray(projects)
-        ? Object.fromEntries(projects.map((p: any) => [String(p.id), p.name || p.projectName || p.title || String(p.id)]))
-        : {};
-    }
+    const projects = await usersApi.getProjects();
+    // id -> name map
+    projectMap.value = Array.isArray(projects)
+      ? Object.fromEntries(projects.map((p: any) => [String(p.id), p.name || p.projectName || p.title || String(p.id)]))
+      : {};
   } catch {}
   // Depolar
   try {
-    const warehouseRes = await fetch(RESOURCE_API_MAP.WAREHOUSE, {
-      headers: { 'Authorization': `Bearer ${getToken()}` }
-    });
-    if (warehouseRes.ok) {
-      const warehouses = await warehouseRes.json();
-      warehouseMap.value = Array.isArray(warehouses)
-        ? Object.fromEntries(warehouses.map((w: any) => [String(w.id), w.name || w.title || String(w.id)]))
-        : {};
-    }
+    const warehouses = await usersApi.getWarehouses();
+    warehouseMap.value = Array.isArray(warehouses)
+      ? Object.fromEntries(warehouses.map((w: any) => [String(w.id), w.name || w.title || String(w.id)]))
+      : {};
   } catch {}
 }
 
@@ -313,9 +296,17 @@ function handleUserUpdate() {
 
 function handleShowEditModal() {
   if (selectedUser.value) {
-    selectedEditUser.value = selectedUser.value;
     showEditModal.value = true;
   }
+}
+
+// Missing event handlers
+function onUserDeleted() {
+  fetchUsers();
+}
+
+function onProjectAssignmentsDeleted() {
+  fetchUsers();
 }
 
 onMounted(async () => {

@@ -37,6 +37,7 @@ import { computed, reactive, ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import IconMail from '@/components/icon/icon-mail.vue';
 import IconLockDots from '@/components/icon/icon-lock-dots.vue';
+import { loginUser, authHelpers } from '../api/auth-api';
 
 const emit = defineEmits(['login-success']);
 
@@ -92,35 +93,13 @@ const handleSubmit = async () => {
       return;
     }
 
-    // --- Supabase login kodları (yorum satırı olarak bırakıldı) ---
-    // const user = await authStore.login(formData.email.trim(), formData.password);
-    // if (!user) {
-    //   throw new Error('Giriş işlemi başarısız');
-    // }
-    // --- Yeni backend login entegrasyonu burada olacak ---
-
-    // API isteği
-    const response = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/v1/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: formData.email.trim(),
-        password: formData.password
-      })
-    });
-    const data = await response.json();
-    if (!response.ok || !data.token) {
-      throw new Error(data.message || 'Giriş işlemi başarısız');
-    }
+    // Yeni auth API kullanımı
+    const data = await loginUser(formData.email, formData.password);
+    
     // Token ve kullanıcı bilgisi kaydet
-    // Roller assignments'tan türetilerek user objesine eklenir
-    if (data.user && Array.isArray(data.user.assignments)) {
-      data.user.roles = data.user.assignments.map(a => a.role);
-    } else {
-      data.user.roles = [];
-    }
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    authHelpers.setToken(data.token);
+    authHelpers.setUser(data.user);
+    
     if (rememberMe.value) {
       localStorage.setItem('credentials', JSON.stringify({
         savedEmail: formData.email,

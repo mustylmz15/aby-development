@@ -3,6 +3,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 import Swal from 'sweetalert2';
+import { usersApi, type User } from './api/users-api';
 
 // Icons
 import IconUsers from '@/components/icon/icon-users.vue';
@@ -47,17 +48,9 @@ const loading = ref(false); // Sadece burada tanımlı olacak
 const fetchUsers = async () => {
     loading.value = true;
     try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/v1/users', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response.ok) throw new Error('Kullanıcılar alınamadı');
-        const data = await response.json();
+        const data = await usersApi.getAllUsers();
         // Alan adlarını dönüştür
-        users.value = (Array.isArray(data) ? data : data.data || []).map((u: any) => {
+        users.value = data.map((u: any) => {
             // assignments içinden sadece rol id'lerini (veya stringlerini) çıkar
             let roleIds: (number | string)[] = [];
             if (Array.isArray(u.assignments)) {
@@ -276,26 +269,13 @@ const submitNewUser = async (userData: any) => {
     });
 
     try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/v1/users', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: userData.email,
-                firstName: userData.firstName,
-                lastName: userData.lastName,
-                password: userData.password,
-                phone: userData.phone
-            })
+        await usersApi.createUser({
+            email: userData.email,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            password: userData.password,
+            phone: userData.phone
         });
-
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.message || 'Kullanıcı eklenemedi');
-        }
 
         await Swal.fire({
             icon: 'success',
@@ -512,25 +492,12 @@ const submitEditUser = async (userId: string, userData: any) => {
     });
 
     try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                firstName: userData.firstName,
-                lastName: userData.lastName,
-                email: userData.email,
-                phone: userData.phone
-            })
+        await usersApi.updateUser(userId, {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            phone: userData.phone
         });
-
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.message || 'Kullanıcı güncellenemedi');
-        }
 
         await Swal.fire({
             icon: 'success',
@@ -668,19 +635,7 @@ const handleDeleteUser = async (userId: string) => {
     });
 
     try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.message || 'Kullanıcı silinemedi');
-        }
+        await usersApi.deleteUser(userId);
 
         await Swal.fire({
             icon: 'success',

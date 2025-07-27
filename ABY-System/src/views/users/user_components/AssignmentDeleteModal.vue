@@ -35,6 +35,7 @@ const emit = defineEmits(['close', 'deleted']);
 
 import { ref, watch } from 'vue';
 import Swal from 'sweetalert2';
+import { usersApi } from '../api/users-api';
 
 const selectedIds = ref<string[]>([]);
 
@@ -60,15 +61,7 @@ async function deleteSelectedAssignments() {
   
   if (!result.isConfirmed) return;
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/remove-assignment`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ assignmentIds: selectedIds.value })
-    });
-    if (!response.ok) throw new Error('Silinemedi!');
+    await usersApi.removeAssignments(selectedIds.value);
     emit('deleted', selectedIds.value);
     await Swal.fire({
       icon: 'success',
