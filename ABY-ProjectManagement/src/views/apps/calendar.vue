@@ -4,29 +4,29 @@
             <div class="mb-5">
                 <div class="mb-4 flex items-center sm:flex-row flex-col sm:justify-between justify-center">
                     <div class="sm:mb-0 mb-4">
-                        <div class="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">Calendar</div>
+                        <div class="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">Takvim</div>
                         <div class="flex items-center mt-2 flex-wrap sm:justify-start justify-center">
                             <div class="flex items-center ltr:mr-4 rtl:ml-4">
                                 <div class="h-2.5 w-2.5 rounded-sm ltr:mr-2 rtl:ml-2 bg-primary"></div>
-                                <div>Work</div>
+                                <div>İş</div>
                             </div>
                             <div class="flex items-center ltr:mr-4 rtl:ml-4">
                                 <div class="h-2.5 w-2.5 rounded-sm ltr:mr-2 rtl:ml-2 bg-info"></div>
-                                <div>Travel</div>
+                                <div>Seyahat</div>
                             </div>
                             <div class="flex items-center ltr:mr-4 rtl:ml-4">
                                 <div class="h-2.5 w-2.5 rounded-sm ltr:mr-2 rtl:ml-2 bg-success"></div>
-                                <div>Personal</div>
+                                <div>Kişisel</div>
                             </div>
                             <div class="flex items-center">
                                 <div class="h-2.5 w-2.5 rounded-sm ltr:mr-2 rtl:ml-2 bg-danger"></div>
-                                <div>Important</div>
+                                <div>Önemli</div>
                             </div>
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary" @click="editEvent()">
                         <icon-plus class="ltr:mr-2 rtl:ml-2" />
-                        Create Event
+                        Etkinlik Oluştur
                     </button>
                 </div>
                 <div class="calendar-wrapper">
@@ -82,18 +82,18 @@
                                     <icon-x />
                                 </button>
                                 <div class="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                                    {{ params.id ? 'Edit Event' : 'Add Event' }}
+                                    {{ params.id ? 'Etkinlik Düzenle' : 'Etkinlik Ekle' }}
                                 </div>
                                 <div class="p-5">
                                     <form @submit.prevent="saveEvent">
                                         <div class="mb-5">
-                                            <label for="title">Event Title :</label>
+                                            <label for="title">Etkinlik Başlığı :</label>
                                             <input
                                                 id="title"
                                                 type="text"
                                                 name="title"
                                                 class="form-input"
-                                                placeholder="Enter Event Title"
+                                                placeholder="Etkinlik Başlığını Girin"
                                                 v-model="params.title"
                                                 required
                                             />
@@ -101,13 +101,13 @@
                                         </div>
 
                                         <div class="mb-5">
-                                            <label for="dateStart">From :</label>
+                                            <label for="dateStart">Başlangıç :</label>
                                             <input
                                                 id="dateStart"
                                                 type="datetime-local"
                                                 name="start"
                                                 class="form-input"
-                                                placeholder="Event Start Date"
+                                                placeholder="Etkinlik Başlangıç Tarihi"
                                                 v-model="params.start"
                                                 :min="minStartDate"
                                                 @change="startDateChange($event)"
@@ -116,13 +116,13 @@
                                             <div class="text-danger mt-2" id="startDateErr"></div>
                                         </div>
                                         <div class="mb-5">
-                                            <label for="dateEnd">To :</label>
+                                            <label for="dateEnd">Bitiş :</label>
                                             <input
                                                 id="dateEnd"
                                                 type="datetime-local"
                                                 name="end"
                                                 class="form-input"
-                                                placeholder="Event End Date"
+                                                placeholder="Etkinlik Bitiş Tarihi"
                                                 v-model="params.end"
                                                 :min="minEndDate"
                                                 required
@@ -130,40 +130,41 @@
                                             <div class="text-danger mt-2" id="endDateErr"></div>
                                         </div>
                                         <div class="mb-5">
-                                            <label for="description">Event Description :</label>
+                                            <label for="description">Etkinlik Açıklaması :</label>
                                             <textarea
                                                 id="description"
                                                 name="description"
                                                 class="form-textarea min-h-[130px]"
-                                                placeholder="Enter Event Description"
+                                                placeholder="Etkinlik Açıklamasını Girin"
                                                 v-model="params.description"
                                             ></textarea>
                                         </div>
                                         <div class="mb-5">
-                                            <label>Badge:</label>
+                                            <label>Kategori:</label>
                                             <div class="mt-3">
                                                 <label class="inline-flex cursor-pointer ltr:mr-3 rtl:ml-3">
                                                     <input type="radio" class="form-radio" name="badge" value="primary" v-model="params.type" />
-                                                    <span class="ltr:pl-2 rtl:pr-2">Work</span>
+                                                    <span class="ltr:pl-2 rtl:pr-2">İş</span>
                                                 </label>
                                                 <label class="inline-flex cursor-pointer ltr:mr-3 rtl:ml-3">
                                                     <input type="radio" class="form-radio text-info" name="badge" value="info" v-model="params.type" />
-                                                    <span class="ltr:pl-2 rtl:pr-2">Travel</span>
+                                                    <span class="ltr:pl-2 rtl:pr-2">Seyahat</span>
                                                 </label>
                                                 <label class="inline-flex cursor-pointer ltr:mr-3 rtl:ml-3">
                                                     <input type="radio" class="form-radio text-success" name="badge" value="success" v-model="params.type" />
-                                                    <span class="ltr:pl-2 rtl:pr-2">Personal</span>
+                                                    <span class="ltr:pl-2 rtl:pr-2">Kişisel</span>
                                                 </label>
                                                 <label class="inline-flex cursor-pointer">
                                                     <input type="radio" class="form-radio text-danger" name="badge" value="danger" v-model="params.type" />
-                                                    <span class="ltr:pl-2 rtl:pr-2">Important</span>
+                                                    <span class="ltr:pl-2 rtl:pr-2">Önemli</span>
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="flex justify-end items-center mt-8">
-                                            <button type="button" class="btn btn-outline-danger" @click="isAddEventModal = false">Cancel</button>
+                                            <button type="button" class="btn btn-outline-danger" @click="isAddEventModal = false">İptal</button>
+                                            <button v-if="params.id" type="button" class="btn btn-outline-warning ltr:ml-4 rtl:mr-4" @click="deleteEvent()">Sil</button>
                                             <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                {{ params.id ? 'Update Event' : 'Create Event' }}
+                                                {{ params.id ? 'Etkinliği Güncelle' : 'Etkinlik Oluştur' }}
                                             </button>
                                         </div>
                                     </form>
@@ -189,7 +190,7 @@
     import IconPlus from '@/components/icon/icon-plus.vue';
     import IconX from '@/components/icon/icon-x.vue';
 
-    useMeta({ title: 'Calendar' });
+    useMeta({ title: 'Takvim' });
 
     const defaultParams = ref({
         id: null,
@@ -222,6 +223,13 @@
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay',
             },
+            buttonText: {
+                today: 'Bugün',
+                month: 'Ay',
+                week: 'Hafta',
+                day: 'Gün'
+            },
+            height: 'auto',
             editable: true,
             dayMaxEvents: true,
             selectable: true,
@@ -244,106 +252,99 @@
         events.value = [
             {
                 id: 1,
-                title: 'All Day Event',
+                title: 'Tüm Gün Etkinliği',
                 start: now.getFullYear() + '-' + getMonth(now) + '-01T14:30:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-02T14:30:00',
                 className: 'danger',
-                description: 'Aenean fermentum quam vel sapien rutrum cursus. Vestibulum imperdiet finibus odio, nec tincidunt felis facilisis eu.',
+                description: 'Proje toplantısı ve sunum hazırlığı için ayrılan süre.',
             },
             {
                 id: 2,
-                title: 'Site Visit',
+                title: 'Saha Ziyareti',
                 start: now.getFullYear() + '-' + getMonth(now) + '-07T19:30:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-08T14:30:00',
                 className: 'primary',
-                description: 'Etiam a odio eget enim aliquet laoreet. Vivamus auctor nunc ultrices varius lobortis.',
+                description: 'Müteahhit firmanın şantiye ziyareti ve denetleme işlemleri.',
             },
             {
                 id: 3,
-                title: 'Product Lunching Event',
+                title: 'Ürün Lansmanı',
                 start: now.getFullYear() + '-' + getMonth(now) + '-17T14:30:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-18T14:30:00',
                 className: 'info',
-                description: 'Proin et consectetur nibh. Mauris et mollis purus. Ut nec tincidunt lacus. Nam at rutrum justo, vitae egestas dolor.',
+                description: 'Yeni ürün lansmanı ve tanıtım etkinliği düzenlemesi.',
             },
             {
                 id: 4,
-                title: 'Meeting',
+                title: 'Toplantı',
                 start: now.getFullYear() + '-' + getMonth(now) + '-12T10:30:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-13T10:30:00',
                 className: 'danger',
-                description: 'Mauris ut mauris aliquam, fringilla sapien et, dignissim nisl. Pellentesque ornare velit non mollis fringilla.',
+                description: 'Haftalık proje değerlendirme ve planlama toplantısı.',
             },
             {
                 id: 5,
-                title: 'Lunch',
+                title: 'Öğle Yemeği',
                 start: now.getFullYear() + '-' + getMonth(now) + '-12T15:00:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-13T15:00:00',
                 className: 'info',
-                description: 'Integer fermentum bibendum elit in egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus.',
+                description: 'Müşteri ile iş yemeği ve proje görüşmeleri.',
             },
             {
                 id: 6,
-                title: 'Conference',
+                title: 'Konferans',
                 start: now.getFullYear() + '-' + getMonth(now) + '-12T21:30:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-13T21:30:00',
                 className: 'success',
-                description:
-                    'Curabitur facilisis vel elit sed dapibus. Nunc sagittis ex nec ante facilisis, sed sodales purus rhoncus. Donec est sapien, porttitor et feugiat sed, eleifend quis sapien. Sed sit amet maximus dolor.',
+                description: 'Teknik konferans ve sektörel gelişmeler sunumu.',
             },
             {
                 id: 7,
-                title: 'Happy Hour',
+                title: 'Sosyal Etkinlik',
                 start: now.getFullYear() + '-' + getMonth(now) + '-12T05:30:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-13T05:30:00',
                 className: 'info',
-                description:
-                    ' odio lectus, porttitor molestie scelerisque blandit, hendrerit sed ex. Aenean malesuada iaculis erat, vitae blandit nisl accumsan ut.',
+                description: 'Ekip motivasyonu için düzenlenen sosyal aktivite.',
             },
             {
                 id: 8,
-                title: 'Dinner',
+                title: 'Akşam Yemeği',
                 start: now.getFullYear() + '-' + getMonth(now) + '-12T20:00:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-13T20:00:00',
                 className: 'danger',
-                description:
-                    'Sed purus urna, aliquam et pharetra ut, efficitur id mi. Pellentesque ut convallis velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                description: 'İş ortakları ile gala yemeği ve network etkinliği.',
             },
             {
                 id: 9,
-                title: 'Birthday Party',
+                title: 'Doğum Günü Partisi',
                 start: now.getFullYear() + '-' + getMonth(now) + '-27T20:00:00',
                 end: now.getFullYear() + '-' + getMonth(now) + '-28T20:00:00',
                 className: 'success',
-                description:
-                    'Sed purus urna, aliquam et pharetra ut, efficitur id mi. Pellentesque ut convallis velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                description: 'Ekip üyesinin doğum günü kutlaması ve eğlence.',
             },
             {
                 id: 10,
-                title: 'New Talent Event',
+                title: 'Yeni Yetenek Etkinliği',
                 start: now.getFullYear() + '-' + getMonth(now, 1) + '-24T08:12:14',
                 end: now.getFullYear() + '-' + getMonth(now, 1) + '-27T22:20:20',
                 className: 'danger',
-                description:
-                    'Sed purus urna, aliquam et pharetra ut, efficitur id mi. Pellentesque ut convallis velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                description: 'İnsan kaynakları yeni personel değerlendirme süreci.',
             },
             {
                 id: 11,
-                title: 'Other new',
+                title: 'Diğer Etkinlik',
                 start: now.getFullYear() + '-' + getMonth(now, -1) + '-13T08:12:14',
                 end: now.getFullYear() + '-' + getMonth(now, -1) + '-16T22:20:20',
                 className: 'primary',
-                description:
-                    'Pellentesque ut convallis velit. Sed purus urna, aliquam et pharetra ut, efficitur id mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                description: 'Genel amaçlı çok günlük etkinlik planlaması.',
             },
             {
                 id: 13,
-                title: 'Upcoming Event',
+                title: 'Gelecek Etkinlik',
                 start: now.getFullYear() + '-' + getMonth(now, 1) + '-15T08:12:14',
                 end: now.getFullYear() + '-' + getMonth(now, 1) + '-18T22:20:20',
                 className: 'primary',
-                description:
-                    'Pellentesque ut convallis velit. Sed purus urna, aliquam et pharetra ut, efficitur id mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                description: 'Gelecek ay planlanmış önemli proje miladı.',
             },
         ];
     };
@@ -366,11 +367,11 @@
                 type: obj.classNames ? obj.classNames[0] : 'primary',
                 description: obj.extendedProps ? obj.extendedProps.description : '',
             };
-            minStartDate.value = new Date();
+            minStartDate.value = dateFormat(new Date());
             minEndDate.value = dateFormat(obj.start);
         } else {
-            minStartDate.value = new Date();
-            minEndDate.value = new Date();
+            minStartDate.value = dateFormat(new Date());
+            minEndDate.value = dateFormat(new Date());
         }
 
         isAddEventModal.value = true;
@@ -410,15 +411,17 @@
         if (params.value.id) {
             //update event
             let event = events.value.find((d: any) => d.id == params.value.id);
-            event.title = params.value.title;
-            event.start = params.value.start;
-            event.end = params.value.end;
-            event.description = params.value.description;
-            event.className = params.value.type;
+            if (event) {
+                event.title = params.value.title;
+                event.start = params.value.start;
+                event.end = params.value.end;
+                event.description = params.value.description;
+                event.className = params.value.type;
+            }
         } else {
             //add event
             let maxEventId = 0;
-            if (events.value) {
+            if (events.value && events.value.length > 0) {
                 maxEventId = events.value.reduce((max: number, character: any) => (character.id > max ? character.id : max), events.value[0].id);
             }
 
@@ -432,16 +435,33 @@
             };
             events.value.push(event);
         }
-        calendar.value.getApi(); //refresh Calendar
-        showMessage('Event has been saved successfully.');
+        
+        // Calendar refresh
+        if (calendar.value) {
+            calendar.value.getApi().refetchEvents();
+        }
+        showMessage('Etkinlik başarıyla kaydedildi.');
         isAddEventModal.value = false;
     };
 
     const startDateChange = (event: any) => {
         const dateStr = event.target.value;
         if (dateStr) {
-            minEndDate.value = dateFormat(dateStr);
-            params.value.end = '';
+            minEndDate.value = dateStr;
+            if (params.value.end && params.value.end < dateStr) {
+                params.value.end = '';
+            }
+        }
+    };
+
+    const deleteEvent = () => {
+        if (params.value.id) {
+            events.value = events.value.filter((event: any) => event.id !== params.value.id);
+            if (calendar.value) {
+                calendar.value.getApi().refetchEvents();
+            }
+            showMessage('Etkinlik başarıyla silindi.');
+            isAddEventModal.value = false;
         }
     };
 
