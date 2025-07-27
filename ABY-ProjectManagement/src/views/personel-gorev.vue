@@ -167,7 +167,7 @@
                                 </span>
                                 <span v-else-if="header === 'İlgili Proje'" 
                                       :class="{
-                                        'badge bg-cyan text-dark': row[header] && row[header] !== '-',
+                                        'badge bg-success': row[header] && row[header] !== '-',
                                         'text-gray-400': !row[header] || row[header] === '-'
                                       }"
                                       :title="row[header] && row[header] !== '-' ? row[header] : 'Proje eşleştirilemedi'">

@@ -74,7 +74,7 @@
                             <option value="">Tümü</option>
                             <option value="Rabia GEVREK">Rabia GEVREK</option>
                             <option value="Özkan ABDİK">Özkan ABDİK</option>
-                            <option value="Reşap BABAYİĞİT">Reşap BABAYİĞİT</option>
+                            <option value="Regaip BABAYİĞİT">Regaip BABAYİĞİT</option>
                             <option value="Mustafa ÇAKIR">Mustafa ÇAKIR</option>
                             <option value="Emel ÇANKAYA">Emel ÇANKAYA</option>
                             <option value="Gülşah KARAKÖSE">Gülşah KARAKÖSE</option>
@@ -90,7 +90,7 @@
                         <select v-model="filters.ilgiliProje" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg transition-all duration-300">
                             <option value="">Tümü</option>
                             <option value="P5855924">P5855924 - Kent Güvenlik</option>
-                            <option value="P5654941">P5654941 - Alaçatı GES</option>
+                            <option value="P5654941">P5654941 - Alaçatı RES</option>
                             <option value="P5836361">P5836361 - Aselsan YHÖAÖS</option>
                             <option value="P5971441">P5971441 - Gebze Metro</option>
                         </select>
@@ -177,7 +177,7 @@
                                 <select v-else v-model="task.sorumlu" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)">
                                     <option value="Rabia GEVREK">Rabia GEVREK</option>
                                     <option value="Özkan ABDİK">Özkan ABDİK</option>
-                                    <option value="Reşap BABAYİĞİT">Reşap BABAYİĞİT</option>
+                                    <option value="Regaip BABAYİĞİT">Regaip BABAYİĞİT</option>
                                     <option value="Mustafa ÇAKIR">Mustafa ÇAKIR</option>
                                     <option value="Emel ÇANKAYA">Emel ÇANKAYA</option>
                                     <option value="Gülşah KARAKÖSE">Gülşah KARAKÖSE</option>
@@ -311,7 +311,7 @@
                                 <option value="">Seçiniz...</option>
                                 <option value="Rabia GEVREK">Rabia GEVREK</option>
                                 <option value="Özkan ABDİK">Özkan ABDİK</option>
-                                <option value="Reşap BABAYİĞİT">Reşap BABAYİĞİT</option>
+                                <option value="Regaip BABAYİĞİT">Regaip BABAYİĞİT</option>
                                 <option value="Mustafa ÇAKIR">Mustafa ÇAKIR</option>
                                 <option value="Emel ÇANKAYA">Emel ÇANKAYA</option>
                                 <option value="Gülşah KARAKÖSE">Gülşah KARAKÖSE</option>
@@ -327,7 +327,7 @@
                             <select v-model="newTask.ilgiliProje" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg transition-all duration-300" required>
                                 <option value="">Seçiniz...</option>
                                 <option value="P5855924">P5855924 - Kent Güvenlik</option>
-                                <option value="P5654941">P5654941 - Alaçatı GES</option>
+                                <option value="P5654941">P5654941 - Alaçatı RES</option>
                                 <option value="P5836361">P5836361 - Aselsan YHT Tren</option>
                                 <option value="P5971441">P5971441 - Gebze Metro</option>
                             </select>
@@ -462,7 +462,7 @@ const tasks = ref([
     {
         id: 4,
         isAdimi: 'Kapısam dış analızlerde fiyat bildirim geçmişine yazıldığı ancak yalnızca AB-SGS\'den bilgi gelebir',
-        sorumlu: 'Reşap BABAYİĞİT, Enes KÖKSAL',
+        sorumlu: 'Regaip BABAYİĞİT, Enes KÖKSAL',
         ilgiliProje: 'P5971441',
         baslangicTarihi: '2025-07-08',
         hedefTarih: '2025-07-08',
@@ -484,7 +484,7 @@ const tasks = ref([
     {
         id: 6,
         isAdimi: 'SGTDE bekleyen ve ELD-5 ödemesi kalan birimlerle yönelik nasıl ilerleneceği konusunda karar alınması',
-        sorumlu: 'UDM-Reşap BABAYİĞİT',
+        sorumlu: 'UDM-Regaip BABAYİĞİT',
         ilgiliProje: 'P5654941',
         baslangicTarihi: '2025-06-13',
         hedefTarih: '2025-07-08',
