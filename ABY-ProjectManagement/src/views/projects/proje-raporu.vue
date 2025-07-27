@@ -153,6 +153,8 @@
                             <th class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hedef</th>
                             <th class="w-24 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Durum</th>
                             <th class="w-96 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Açıklama</th>
+                            <th class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Son Değişiklik</th>
+                            <th class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Son Değiştiren</th>
                             <th class="w-32 px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">İşlemler</th>
                         </tr>
                     </thead>
@@ -169,9 +171,7 @@
                                 <textarea v-else v-model="task.isAdimi" class="form-textarea w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" rows="3" @blur="saveTask(task)" @keydown.ctrl.enter="saveTask(task)"></textarea>
                             </td><td class="w-32 px-4 py-4">
                                 <div v-if="!task.isEditing" class="flex items-center">
-                                    <div class="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3">
-                                        {{ task.sorumlu.split(' ').map(n => n[0]).join('').substring(0, 2) }}
-                                    </div>
+                                    
                                     <div class="word-wrap-cell">{{ task.sorumlu }}</div>
                                 </div>
                                 <select v-else v-model="task.sorumlu" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)">
@@ -223,6 +223,21 @@
                                 <textarea v-else v-model="task.aciklama" class="form-textarea w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" rows="3" @blur="saveTask(task)" @keydown.ctrl.enter="saveTask(task)" @keydown.enter.stop></textarea>
                             </td>
                             <td class="w-32 px-4 py-4">
+                                <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+                                    <div class="font-medium">{{ formatDate(task.sonDegisiklikTarihi || task.baslangicTarihi) }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-500">{{ formatTime(task.sonDegisiklikTarihi || task.baslangicTarihi) }}</div>
+                                </div>
+                            </td>
+                            <td class="w-32 px-4 py-4">
+                                <div class="flex items-center">
+                                    
+                                    <div class="text-sm">
+                                        <div class="font-medium text-gray-800 dark:text-gray-200">{{ task.sonDegistiren || 'Admin' }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">Sistem Kullanıcısı</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="w-32 px-4 py-4">
                                 <div class="flex gap-2 justify-center">
                                     <button v-if="!task.isEditing" type="button" @click="editTask(task)" class="btn btn-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105" title="Düzenle">
                                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -243,7 +258,7 @@
                             </td>
                         </tr>
                         <tr v-if="filteredTasks.length === 0">
-                            <td colspan="9" class="text-center py-12">
+                            <td colspan="11" class="text-center py-12">
                                 <div class="flex flex-col items-center">
                                     <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -435,6 +450,8 @@ const tasks = ref([
         hedefTarih: '2025-07-25',
         durum: 'Açık',
         aciklama: '2 Eyl\nKonu takipte.',
+        sonDegisiklikTarihi: '2025-07-25T14:30:00',
+        sonDegistiren: 'Admin',
         isEditing: false
     },
     {
@@ -446,6 +463,8 @@ const tasks = ref([
         hedefTarih: '2025-07-15',
         durum: 'Kapalı',
         aciklama: 'Mali işlere konu aktarılacak.\nTamamlandı.',
+        sonDegisiklikTarihi: '2025-07-24T16:15:00',
+        sonDegistiren: 'Rabia GEVREK',
         isEditing: false
     },
     {
@@ -457,6 +476,8 @@ const tasks = ref([
         hedefTarih: '2025-07-08',
         durum: 'Açık',
         aciklama: 'Tablet GÜLASŞ UMSG\'ye hediye edilmesi konusu proje ile konuşulacak.\nAraştırma devam ediyor.',
+        sonDegisiklikTarihi: '2025-07-26T09:20:00',
+        sonDegistiren: 'Özkan ABDİK',
         isEditing: false
     },
     {
@@ -468,6 +489,8 @@ const tasks = ref([
         hedefTarih: '2025-07-08',
         durum: 'Kapalı',
         aciklama: 'Diğer projeler için ilgili arkadaşlara öğretilecek.\nEğitim tamamlandı.',
+        sonDegisiklikTarihi: '2025-07-23T11:45:00',
+        sonDegistiren: 'Admin',
         isEditing: false
     },
     {
@@ -479,6 +502,8 @@ const tasks = ref([
         hedefTarih: '2025-06-24',
         durum: 'Açık',
         aciklama: '25 Mayıs\'ta Radsan toplantısı yapılacak.\nBölgeden örnek lokasyonlar belirlenecek, gönderilenecek.\nToplantı planlanıyor.',
+        sonDegisiklikTarihi: '2025-07-25T13:10:00',
+        sonDegistiren: 'Mustafa ÇAKIR',
         isEditing: false
     },
     {
@@ -490,6 +515,8 @@ const tasks = ref([
         hedefTarih: '2025-07-08',
         durum: 'Açık',
         aciklama: 'Hurda olarak belirtilen cihazların gönderilmesi takip edilecek.\nLojistik koordinasyonu yapılıyor.',
+        sonDegisiklikTarihi: '2025-07-26T08:35:00',
+        sonDegistiren: 'Admin',
         isEditing: false
     },
     {
@@ -501,6 +528,8 @@ const tasks = ref([
         hedefTarih: '2025-01-08',
         durum: 'Kapalı',
         aciklama: 'Yıl sonunu beklemeden geçiş çalışmaları başlatılacaktır.\nGeçiş tamamlandı.\nDokümantasyon hazırlandı.',
+        sonDegisiklikTarihi: '2025-07-22T15:20:00',
+        sonDegistiren: 'Emel ÇANKAYA',
         isEditing: false
     },
     {
@@ -512,6 +541,8 @@ const tasks = ref([
         hedefTarih: '2025-06-05',
         durum: 'Açık',
         aciklama: 'Proje Bütçesi/Arıza kayıt sayıları olarak tablo üzerinden değerlendirme yapılacaktır.\nAnaliz devam ediyor.',
+        sonDegisiklikTarihi: '2025-07-26T10:15:00',
+        sonDegistiren: 'Gülşah KARAKÖSE',
         isEditing: false
     }
 ]);
@@ -539,6 +570,12 @@ const formatDate = (dateString: string) => {
     return date.toLocaleDateString('tr-TR');
 };
 
+const formatTime = (dateString: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+};
+
 const getDurumBadgeClass = (durum: string) => {
     return durum === 'Açık' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
 };
@@ -560,6 +597,8 @@ const editTask = (task: any) => {
 
 const saveTask = (task: any) => {
     task.isEditing = false;
+    task.sonDegisiklikTarihi = new Date().toISOString();
+    task.sonDegistiren = 'Admin'; // Gerçek uygulamada current user
     // Burada API çağrısı yapılabilir
 };
 
@@ -587,9 +626,12 @@ const addNewTask = () => {
 
 const saveNewTask = () => {
     const nextId = Math.max(...tasks.value.map(t => t.id)) + 1;
+    const now = new Date().toISOString();
     tasks.value.push({
         id: nextId,
         ...newTask.value,
+        sonDegisiklikTarihi: now,
+        sonDegistiren: 'Admin',
         isEditing: false
     });
     showAddModal.value = false;

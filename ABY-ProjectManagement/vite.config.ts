@@ -18,4 +18,9 @@ export default defineConfig({
     optimizeDeps: {
         include: [],
     },
+    server: {
+        port: 5175,
+        host: true
+        // port kaldırıldı - Vite varsayılan 5173'ü kullanacak, meşgulse 5174
+    }
 });

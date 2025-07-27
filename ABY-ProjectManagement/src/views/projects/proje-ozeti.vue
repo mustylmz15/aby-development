@@ -143,10 +143,7 @@
                             <th class="w-32 sortable" @click="sortBy('sarfMalzemeDurumu')">
                                 Şarf Malzeme Durumu
                                 <i :class="getSortIcon('sarfMalzemeDurumu')" class="ml-1"></i>
-                            </th>                            <th class="w-32 sortable" @click="sortBy('dkotMalzemeDurumu')">
-                                DKÖT Malzeme Durumu
-                                <i :class="getSortIcon('dkotMalzemeDurumu')" class="ml-1"></i>
-                            </th>
+                            </th>                            
                             <!-- Bütçe ve Teslimat -->
                             <th class="w-40 sortable" @click="sortBy('toplamEldButcesi')">
                                 Toplam ELD Bütçesi

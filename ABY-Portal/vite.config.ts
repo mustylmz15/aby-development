@@ -10,6 +10,7 @@ export default defineConfig({
     }
   },
   server: {
+    port: 5173,
     host: true
     // port kaldırıldı - Vite varsayılan 5173'ü kullanacak
   }

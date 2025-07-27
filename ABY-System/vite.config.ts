@@ -19,6 +19,7 @@ export default defineConfig({
         include: [],
     },
     server: {
+        port: 5174,
         host: true
         // port kaldırıldı - Vite varsayılan 5173'ü kullanacak, meşgulse 5174
     }
