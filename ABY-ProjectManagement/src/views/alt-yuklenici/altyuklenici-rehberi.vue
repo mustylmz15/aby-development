@@ -32,63 +32,55 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Sol Taraf - Modern Filtre Paneli -->
+                <!-- Sol Taraf - Minimal Filtre Paneli -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-                        <!-- Filtre Header -->
-                        <div class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <!-- Ultra Minimal Filtre Header -->
+                        <div class="bg-gray-50 dark:bg-gray-700 px-3 py-2 border-b border-gray-200 dark:border-gray-600">
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"/>
-                                        </svg>
-                                    </div>
-                                    <h6 class="text-lg font-bold text-gray-900 dark:text-white">Filtreler</h6>
+                                <div class="flex items-center space-x-1.5">
+                                    <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"/>
+                                    </svg>
+                                    <h6 class="text-xs font-semibold text-gray-700 dark:text-gray-200">Filtreler</h6>
                                 </div>
-                                <div class="flex gap-2">
-                                    <button @click="refreshExcelData" class="btn btn-success btn-sm flex items-center space-x-1 shadow-sm hover:shadow-md transition-all duration-200" :disabled="isLoading">
-                                        <svg v-if="!isLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex gap-0.5">
+                                    <button @click="clearAllFilters" class="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-all" :title="'Tüm filtreleri temizle'">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                    <button @click="refreshExcelData" class="p-1 text-green-500 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded transition-all" :disabled="isLoading" :title="'Verileri yenile'">
+                                        <svg v-if="!isLoading" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                                         </svg>
-                                        <svg v-else class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg v-else class="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                                         </svg>
-                                        <span class="text-xs">{{ isLoading ? 'Yükleniyor...' : 'Yenile' }}</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Filtre İçeriği -->
-                        <div class="p-6 space-y-6">
+                        <!-- Ultra Kompakt Filtre İçeriği -->
+                        <div class="p-3 space-y-3">
                             <!-- Ad Soyad Arama -->
-                            <div class="relative">
-                                <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                    Ad Soyad:
-                                </label>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Ad Soyad</label>
                                 <input v-model="searchTerm" type="text" placeholder="Firma adında ara..." 
-                                       class="form-input w-full rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"/>
+                                       class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors"/>
                             </div>
 
                             <!-- Telefon Filtresi -->
-                            <div class="relative">
-                                <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                                    </svg>
-                                    Cep Telefonu:
-                                </label>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Cep Telefonu</label>
                                 <input v-model="filterTelefon" type="text" placeholder="Telefon numarası" 
-                                       class="form-input w-full rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"/>
+                                       class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors"/>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">İlgili Müdürlük:</label>
-                                <select v-model="filterMudurluk" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">İlgili Müdürlük</label>
+                                <select v-model="filterMudurluk" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="mudurluk in ilgiliMudurluklerList" :key="mudurluk" :value="mudurluk">
                                         {{ mudurluk }}
@@ -97,8 +89,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Ekip:</label>
-                                <select v-model="filterEkip" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Ekip</label>
+                                <select v-model="filterEkip" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="ekip in ekiplerList" :key="ekip" :value="ekip">
                                         {{ ekip }}
@@ -107,8 +99,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Projeler:</label>
-                                <select v-model="filterProje" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Projeler</label>
+                                <select v-model="filterProje" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="proje in projelerList" :key="proje" :value="proje">
                                         {{ proje }}
@@ -117,8 +109,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">İlgili Müh.:</label>
-                                <select v-model="filterMuhendis" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">İlgili Müh.</label>
+                                <select v-model="filterMuhendis" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="muhendis in ilgiliMuhendislerList" :key="muhendis" :value="muhendis">
                                         {{ muhendis }}
@@ -127,8 +119,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Görev Bölgesi:</label>
-                                <select v-model="filterGorevBolgesi" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Görev Bölgesi</label>
+                                <select v-model="filterGorevBolgesi" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="bolge in gorevBolgeleriList" :key="bolge" :value="bolge">
                                         {{ bolge }}
@@ -137,8 +129,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Firma Bilgisi:</label>
-                                <select v-model="filterFirma" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Firma Bilgisi</label>
+                                <select v-model="filterFirma" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="firma in firmaBilgileriList" :key="firma" :value="firma">
                                         {{ firma }}
@@ -147,8 +139,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Kan Grubu:</label>
-                                <select v-model="filterKanGrubu" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Kan Grubu</label>
+                                <select v-model="filterKanGrubu" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="kanGrubu in kanGruplariList" :key="kanGrubu" :value="kanGrubu">
                                         {{ kanGrubu }}
@@ -157,8 +149,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">İkametgah:</label>
-                                <select v-model="filterSehir" class="form-select w-full">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">İkametgah</label>
+                                <select v-model="filterSehir" class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 transition-colors">
                                     <option value="">Tümü</option>
                                     <option v-for="sehir in ikametgahlarList" :key="sehir" :value="sehir">
                                         {{ sehir }}
@@ -166,9 +158,9 @@
                                 </select>
                             </div>
 
-                            <div class="pt-4">
-                                <button @click="performSearch" type="button" class="btn btn-primary w-full">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="pt-2">
+                                <button @click="performSearch" type="button" class="w-full px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors flex items-center justify-center">
+                                    <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                     </svg>
                                     Ara
@@ -187,7 +179,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                             <h3 class="text-lg font-medium mb-2">Altyüklenici Rehberi</h3>
-                            <p class="text-sm">Arama yapmak için sol taraftaki filtreleri kullanın ve "Ara" butonuna tıklayın.</p>
+                            <p class="text-sm">Arama yapmak için sol taraftaki filtreleri kullanın ve "Ara" butonuna tıklayın veya filtrelerde değişiklik yapın.</p>
                         </div>
                     </div>
 
@@ -224,7 +216,10 @@
                                                 {{ contractor.yetkiliKisi }}
                                                 <span class="text-sm font-normal text-gray-500">| {{ contractor.firmaAdi }}</span>
                                             </h3>
-                                            <p class="text-sm text-gray-500 mb-2">ASELSAN Sicil: {{ contractor.aselsanSicil || 'Belirtilmemiş' }}</p>
+                                            <p class="text-sm mb-2">
+                                                <span class="font-medium text-blue-600">ASELSAN Sicil:</span>
+                                                <span class="text-green-600 dark:text-green-400 ml-1 font-medium">{{ contractor.aselsanSicil || 'Belirtilmemiş' }}</span>
+                                            </p>
                                             
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                                                 <div>
@@ -237,35 +232,65 @@
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">Firma Sicil:</span>
-                                                    <span class="text-orange-600 ml-1">{{ contractor.firmaSicil || 'Belirtilmemiş' }}</span>
+                                                    <span class="text-yellow-600 dark:text-yellow-400 ml-1 font-medium">{{ contractor.firmaSicil || 'Belirtilmemiş' }}</span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">Ekip:</span>
-                                                    <span class="text-orange-600 ml-1">{{ contractor.ekip || 'Kent Güvenliği Ürün Destegi Brm' }}</span>
+                                                    <span 
+                                                        @click="filterByEkip(contractor.ekip || 'Kent Güvenliği Ürün Destegi Brm')" 
+                                                        class="text-teal-600 dark:text-teal-400 ml-1 cursor-pointer hover:text-teal-800 dark:hover:text-teal-300 hover:underline transition-all duration-200 font-medium"
+                                                        :title="`${contractor.ekip || 'Kent Güvenliği Ürün Destegi Brm'} ekibine göre filtrele`">
+                                                        {{ contractor.ekip || 'Kent Güvenliği Ürün Destegi Brm' }}
+                                                    </span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">Kan Grubu:</span>
-                                                    <span class="text-gray-600 dark:text-gray-400 ml-1">{{ contractor.kanGrubu || 'A Rh(+)' }}</span>
+                                                    <span class="text-red-600 dark:text-red-400 ml-1 font-medium">{{ contractor.kanGrubu || 'A Rh(+)' }}</span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">Görev Bölgesi:</span>
-                                                    <span class="text-gray-600 dark:text-gray-400 ml-1">{{ contractor.gorevBolgesi || 'Gaziantep, Kilis' }}</span>
+                                                    <span 
+                                                        @click="filterByGorevBolgesi(contractor.gorevBolgesi || 'Gaziantep, Kilis')" 
+                                                        class="text-gray-600 dark:text-gray-400 ml-1 cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 hover:underline transition-all duration-200"
+                                                        :title="`${contractor.gorevBolgesi || 'Gaziantep, Kilis'} bölgesine göre filtrele`">
+                                                        {{ contractor.gorevBolgesi || 'Gaziantep, Kilis' }}
+                                                    </span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">Proje:</span>
-                                                    <span class="text-blue-600 ml-1">{{ contractor.sonProje }}</span>
+                                                    <span 
+                                                        @click="filterByProje(contractor.sonProje)" 
+                                                        class="text-purple-600 dark:text-purple-400 ml-1 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 hover:underline transition-all duration-200 font-medium"
+                                                        :title="`${contractor.sonProje} projesine göre filtrele`">
+                                                        {{ contractor.sonProje }}
+                                                    </span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">İlgili Mühendis:</span>
-                                                    <span class="text-gray-600 dark:text-gray-400 ml-1">{{ contractor.ilgiliMuhendis || 'Oğuzhan ÜNAL' }}</span>
+                                                    <span 
+                                                        @click="filterByMuhendis(contractor.ilgiliMuhendis || 'Oğuzhan ÜNAL')" 
+                                                        class="text-gray-600 dark:text-gray-400 ml-1 cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 hover:underline transition-all duration-200"
+                                                        :title="`${contractor.ilgiliMuhendis || 'Oğuzhan ÜNAL'} mühendisine göre filtrele`">
+                                                        {{ contractor.ilgiliMuhendis || 'Oğuzhan ÜNAL' }}
+                                                    </span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">İlgili Müdürlük:</span>
-                                                    <span class="text-orange-600 ml-1">{{ contractor.ilgiliMudurluk || 'Ürün Destegi Müdürlüğü' }}</span>
+                                                    <span 
+                                                        @click="filterByMudurluk(contractor.ilgiliMudurluk || 'Ürün Destegi Müdürlüğü')" 
+                                                        class="text-orange-600 ml-1 cursor-pointer hover:text-orange-800 hover:underline transition-all duration-200 font-medium"
+                                                        :title="`${contractor.ilgiliMudurluk || 'Ürün Destegi Müdürlüğü'} müdürlüğüne göre filtrele`">
+                                                        {{ contractor.ilgiliMudurluk || 'Ürün Destegi Müdürlüğü' }}
+                                                    </span>
                                                 </div>
                                                 <div>
                                                     <span class="font-medium text-blue-600">İkametgah:</span>
-                                                    <span class="text-gray-600 dark:text-gray-400 ml-1">{{ contractor.sehir }}</span>
+                                                    <span 
+                                                        @click="filterBySehir(contractor.sehir)" 
+                                                        class="text-gray-600 dark:text-gray-400 ml-1 cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 hover:underline transition-all duration-200"
+                                                        :title="`${contractor.sehir} şehrine göre filtrele`">
+                                                        {{ contractor.sehir }}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -478,7 +503,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useMeta } from '@/composables/use-meta';
 import * as XLSX from 'xlsx';
@@ -840,9 +865,98 @@ const handleImageError = (event: Event) => {
     img.src = '/assets/images/user-profile.jpeg';
 };
 
+// Watch fonksiyonları - filtrelere veri girişi yapıldığında otomatik filtreleme
+
+// Metin alanları için debounced watch (300ms gecikme ile)
+let searchTimeout: NodeJS.Timeout;
+watch([searchTerm, filterTelefon], () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        // Sadece filtrede değer varsa sonuçları göster
+        if (searchTerm.value.trim() || filterTelefon.value.trim()) {
+            showResults.value = true;
+        }
+        currentPage.value = 1;
+    }, 300);
+});
+
+// Select alanları için anında watch (gecikme olmadan)
+watch([filterMudurluk, filterEkip, filterProje, filterMuhendis, filterGorevBolgesi, filterFirma, filterKanGrubu, filterSehir], () => {
+    // Herhangi bir select'te değer varsa sonuçları göster
+    if (filterMudurluk.value || filterEkip.value || filterProje.value || filterMuhendis.value || 
+        filterGorevBolgesi.value || filterFirma.value || filterKanGrubu.value || filterSehir.value) {
+        showResults.value = true;
+    }
+    currentPage.value = 1;
+});
+
 const performSearch = () => {
     showResults.value = true;
     currentPage.value = 1; // Reset to first page when searching
+};
+
+// Şehire göre filtreleme fonksiyonu
+const filterBySehir = (sehir: string) => {
+    clearAllFilters();
+    filterSehir.value = sehir;
+    showResults.value = true;
+    currentPage.value = 1;
+};
+
+// Ekibe göre filtreleme fonksiyonu
+const filterByEkip = (ekip: string) => {
+    clearAllFilters();
+    filterEkip.value = ekip;
+    showResults.value = true;
+    currentPage.value = 1;
+};
+
+// Müdürlüğe göre filtreleme fonksiyonu
+const filterByMudurluk = (mudurluk: string) => {
+    clearAllFilters();
+    filterMudurluk.value = mudurluk;
+    showResults.value = true;
+    currentPage.value = 1;
+};
+
+// Görev bölgesine göre filtreleme fonksiyonu
+const filterByGorevBolgesi = (bölge: string) => {
+    clearAllFilters();
+    filterGorevBolgesi.value = bölge;
+    showResults.value = true;
+    currentPage.value = 1;
+};
+
+// Projeye göre filtreleme fonksiyonu
+const filterByProje = (proje: string) => {
+    clearAllFilters();
+    filterProje.value = proje;
+    showResults.value = true;
+    currentPage.value = 1;
+};
+
+// Mühendise göre filtreleme fonksiyonu
+const filterByMuhendis = (muhendis: string) => {
+    clearAllFilters();
+    filterMuhendis.value = muhendis;
+    showResults.value = true;
+    currentPage.value = 1;
+};
+
+// Tüm filtreleri temizleme fonksiyonu
+const clearAllFilters = () => {
+    searchTerm.value = '';
+    filterTelefon.value = '';
+    filterMudurluk.value = '';
+    filterEkip.value = '';
+    filterProje.value = '';
+    filterMuhendis.value = '';
+    filterGorevBolgesi.value = '';
+    filterFirma.value = '';
+    filterKanGrubu.value = '';
+    filterSehir.value = '';
+    // Sonuçları gizle
+    showResults.value = false;
 };
 
 const getSektorBadge = (sektor: string) => {

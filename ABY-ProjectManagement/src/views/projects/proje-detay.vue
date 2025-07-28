@@ -891,7 +891,7 @@ const mockProjectsData = {
     'P5654941': {
         projeKodu: 'P5654941',
         haneliKod: '5654',
-        projeAdi: 'Alaçatı GES',
+        projeAdi: 'Alaçatı RES',
         programDirektorlugu: 'Entegre Lojistik Destek Direktörlüğü',
         projeTuru: 'Ar-Ge',
         projeGuncelDurumu: 'Proje Gecikmede',

@@ -37,7 +37,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                         <span class="text-sm font-medium">
-                            {{ isLoadingExcel ? 'Yükleniyor...' : 'Excel Verilerini Yenile' }}
+                            {{ isLoadingExcel ? 'Yükleniyor...' : 'Verileri Yenile' }}
                         </span>
                     </div>
                 </button>
@@ -201,7 +201,7 @@
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="text-center">
                                 <div class="text-3xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">100%</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400 font-medium">Dağılım</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 font-medium">Proje Dağılım</div>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                     <div class="flex items-center justify-between p-3 bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 shadow-lg"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Entegre Lojistik Destek Program Direktörlüğü</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Entegre Lojistik Destek Direktörlüğü</span>
                         </div>
                         <div class="flex items-center space-x-2">
                             <span class="text-sm font-bold text-cyan-600 dark:text-cyan-400">{{ realProjectDistribution.eld }}%</span>

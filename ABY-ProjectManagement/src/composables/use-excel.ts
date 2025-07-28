@@ -34,6 +34,18 @@ export interface TaskData {
     currentPersonnel: number;
 }
 
+export interface CalendarEvent {
+    id: string;
+    title: string;
+    start: string;
+    end: string;
+    className: string;
+    category?: string; // Türkçe kategori adı
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export const useExcel = () => {
     const readExcelFile = async (filePath: string) => {
         try {
@@ -1154,6 +1166,260 @@ export const useExcel = () => {
         return projectMapping[pypPrefix] || '-';
     };
 
+    // Calendar Excel işlemleri
+    const initializeCalendarExcel = async () => {
+        try {
+            const filePath = '/excel/proje-calendar-event-task.xlsx';
+            const response = await fetch(filePath);
+            
+            if (!response.ok) {
+                console.log('Excel dosyası bulunamadı, yeni oluşturuluyor...');
+                // Dosya yoksa boş bir Excel oluştur
+                const newWorkbook = XLSX.utils.book_new();
+                const worksheetData = [
+                    ['ID', 'Title', 'Start', 'End', 'ClassName', 'Description', 'CreatedAt', 'UpdatedAt']
+                ];
+                const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+                XLSX.utils.book_append_sheet(newWorkbook, worksheet, 'CalendarEvents');
+                
+                console.log('Calendar Excel dosyası için boş yapı hazırlandı');
+                return newWorkbook;
+            }
+            
+            console.log('Excel dosyası bulundu, yükleniyor...');
+            const arrayBuffer = await response.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            
+            // İlk yüklemede localStorage'a da kaydet
+            const worksheet = workbook.Sheets['CalendarEvents'] || Object.values(workbook.Sheets)[0];
+            if (worksheet) {
+                const excelData = XLSX.write(workbook, { type: 'base64', bookType: 'xlsx' });
+                localStorage.setItem('calendar-events-excel', excelData);
+                console.log('Excel verisi localStorage\'a kaydedildi');
+            }
+            
+            return workbook;
+        } catch (error) {
+            console.error('Calendar Excel dosyası initialize edilemedi:', error);
+            // Hata durumunda da boş bir workbook döndür
+            const newWorkbook = XLSX.utils.book_new();
+            const worksheetData = [
+                ['ID', 'Title', 'Start', 'End', 'ClassName', 'Description', 'CreatedAt', 'UpdatedAt']
+            ];
+            const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+            XLSX.utils.book_append_sheet(newWorkbook, worksheet, 'CalendarEvents');
+            return newWorkbook;
+        }
+    };
+
+    const getCalendarEvents = async (): Promise<CalendarEvent[]> => {
+        try {
+            console.log('Calendar events API\'den yükleniyor...');
+            
+            const response = await fetch('http://localhost:3001/api/calendar/events');
+            if (!response.ok) {
+                throw new Error('API isteği başarısız: ' + response.status);
+            }
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error('API hatası: ' + result.error);
+            }
+            
+            console.log('API\'den', result.data.length, 'calendar event yüklendi');
+            return result.data;
+            
+        } catch (error) {
+            console.error('Calendar events API\'den alınamadı:', error);
+            console.log('Fallback data kullanılıyor');
+            return getFallbackCalendarEvents();
+        }
+    };
+
+    // Fallback data
+    const getFallbackCalendarEvents = (): CalendarEvent[] => {
+        const now = '2025-07-28T10:00:00';
+        return [
+            {
+                id: '1',
+                title: 'Tüm Gün Etkinliği',
+                start: '2025-07-01T14:30:00',
+                end: '2025-07-02T14:30:00',
+                className: 'danger',
+                description: 'Proje toplantısı ve sunum hazırlığı için ayrılan süre.',
+                createdAt: now,
+                updatedAt: now
+            },
+            {
+                id: '2',
+                title: 'Saha Ziyareti',
+                start: '2025-07-07T19:30:00',
+                end: '2025-07-08T14:30:00',
+                className: 'primary',
+                description: 'Müteahhit firmanın şantiye ziyareti ve denetleme işlemleri.',
+                createdAt: now,
+                updatedAt: now
+            },
+            {
+                id: '3',
+                title: 'Ürün Lansmanı',
+                start: '2025-07-17T14:30:00',
+                end: '2025-07-18T14:30:00',
+                className: 'info',
+                description: 'Yeni ürün lansmanı ve tanıtım etkinliği düzenlemesi.',
+                createdAt: now,
+                updatedAt: now
+            },
+            {
+                id: '4',
+                title: 'Toplantı',
+                start: '2025-07-12T10:30:00',
+                end: '2025-07-13T10:30:00',
+                className: 'danger',
+                description: 'Haftalık proje değerlendirme ve planlama toplantısı.',
+                createdAt: now,
+                updatedAt: now
+            },
+            {
+                id: '5',
+                title: 'Öğle Yemeği',
+                start: '2025-07-12T15:00:00',
+                end: '2025-07-13T15:00:00',
+                className: 'info',
+                description: 'Müşteri ile iş yemeği ve proje görüşmeleri.',
+                createdAt: now,
+                updatedAt: now
+            }
+        ];
+    };
+
+    const saveCalendarEvent = async (eventData: Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>): Promise<CalendarEvent> => {
+        try {
+            console.log('=== SAVE CALENDAR EVENT ===');
+            console.log('API\'ye yeni calendar event kaydediliyor...', eventData);
+            console.log('JSON stringify edilmiş veri:', JSON.stringify(eventData));
+            
+            const response = await fetch('http://localhost:3001/api/calendar/events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(eventData)
+            });
+            
+            console.log('API response status:', response.status);
+            console.log('API response ok:', response.ok);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API hata detayı:', errorText);
+                throw new Error('API isteği başarısız: ' + response.status + ' - ' + errorText);
+            }
+            
+            const result = await response.json();
+            console.log('API başarılı sonuç:', result);
+            
+            if (!result.success) {
+                throw new Error('API hatası: ' + result.error);
+            }
+            
+            console.log('Yeni calendar event API\'ye kaydedildi:', result.data);
+            return result.data;
+            
+        } catch (error) {
+            console.error('Calendar event API\'ye kaydedilemedi:', error);
+            throw error;
+        }
+    };
+
+    const updateCalendarEvent = async (id: string, eventData: Partial<Omit<CalendarEvent, 'id' | 'createdAt'>>): Promise<CalendarEvent> => {
+        try {
+            console.log('API\'de calendar event güncelleniyor...', id, eventData);
+            
+            const response = await fetch(`http://localhost:3001/api/calendar/events/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(eventData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('API isteği başarısız: ' + response.status);
+            }
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error('API hatası: ' + result.error);
+            }
+            
+            console.log('Calendar event API\'de güncellendi:', result.data);
+            return result.data;
+            
+        } catch (error) {
+            console.error('Calendar event API\'de güncellenemedi:', error);
+            throw error;
+        }
+    };
+
+    const deleteCalendarEvent = async (id: string): Promise<void> => {
+        try {
+            console.log('API\'den calendar event siliniyor...', id);
+            
+            const response = await fetch(`http://localhost:3001/api/calendar/events/${id}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) {
+                throw new Error('API isteği başarısız: ' + response.status);
+            }
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error('API hatası: ' + result.error);
+            }
+            
+            console.log('Calendar event API\'den silindi:', id);
+            
+        } catch (error) {
+            console.error('Calendar event API\'den silinemedi:', error);
+            throw error;
+        }
+    };
+
+    const saveCalendarEventsToExcel = async (events: CalendarEvent[]): Promise<void> => {
+        try {
+            // Browser ortamında dosya kaydetme işlemi localStorage ile simüle edilebilir
+            // Gerçek bir Excel dosyası oluştur
+            const worksheetData = [
+                ['ID', 'Title', 'Start', 'End', 'ClassName', 'Description', 'CreatedAt', 'UpdatedAt'],
+                ...events.map(event => [
+                    event.id,
+                    event.title,
+                    event.start,
+                    event.end,
+                    event.className,
+                    event.description,
+                    event.createdAt,
+                    event.updatedAt
+                ])
+            ];
+            
+            const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'CalendarEvents');
+            
+            // Browser'da localStorage'a kaydet (geliştirme amaçlı)
+            const excelData = XLSX.write(workbook, { type: 'base64', bookType: 'xlsx' });
+            localStorage.setItem('calendar-events-excel', excelData);
+            
+            console.log('Calendar events Excel\'e kaydedildi');
+        } catch (error) {
+            console.error('Calendar events Excel\'e kaydedilemedi:', error);
+            throw error;
+        }
+    };
+
     return {
         readExcelFile,
         parseNotificationData,
@@ -1165,6 +1431,12 @@ export const useExcel = () => {
         getTableData,
         getTaskTableData,
         getProjectMapping,
-        getPypToProjectName
+        getPypToProjectName,
+        // Calendar functions
+        initializeCalendarExcel,
+        getCalendarEvents,
+        saveCalendarEvent,
+        updateCalendarEvent,
+        deleteCalendarEvent
     };
 };
