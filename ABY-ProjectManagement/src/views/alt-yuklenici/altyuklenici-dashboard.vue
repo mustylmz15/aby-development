@@ -32,6 +32,32 @@
                 </div>
             </div>
 
+            <!-- Filtre Göstergesi -->
+            <div v-if="activeFilterCount > 0" class="bg-blue-50 dark:bg-blue-900 rounded-xl p-4 mb-6 border border-blue-200 dark:border-blue-700">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center flex-wrap gap-2">
+                        <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Aktif Filtreler:</span>
+                        <div v-for="filter in activeFiltersDisplay" :key="filter.type" 
+                             class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2">
+                            <span>{{ filter.type }}: {{ filter.value.length > 20 ? filter.value.substring(0, 20) + '...' : filter.value }}</span>
+                            <button @click="setFilter(filter.type.toLowerCase() as any, null)" 
+                                    class="text-blue-200 hover:text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button @click="clearAllFilters" 
+                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Tümünü Temizle
+                    </button>
+                </div>
+            </div>
+
             <!-- Dashboard İçeriği -->
             <div class="space-y-6">
                 <!-- Üst Satır - 3 Kart -->
@@ -69,7 +95,10 @@
                             </div>
                             <div class="flex-1 overflow-y-auto max-h-96 pr-2" v-if="topProjects.length > 0">
                                 <div class="space-y-4">
-                                    <div v-for="(project, index) in topProjects" :key="index" class="flex items-center">
+                                    <div v-for="(project, index) in topProjects" :key="index" 
+                                         class="flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+                                         :class="{ 'bg-blue-50 dark:bg-blue-900 ring-2 ring-blue-500': project.isActive }"
+                                         @click="setFilter('project', project.fullName)">
                                         <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 flex-shrink-0">
                                             <div :class="getProjectIconClass(index)" class="rounded-full w-9 h-9 grid place-content-center">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +144,10 @@
                             </div>
                             <div class="flex-1 overflow-y-auto max-h-96 pr-2" v-if="topCompanies.length > 0">
                                 <div class="space-y-4">
-                                    <div v-for="(company, index) in topCompanies" :key="index" class="flex items-center">
+                                    <div v-for="(company, index) in topCompanies" :key="index" 
+                                         class="flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+                                         :class="{ 'bg-blue-50 dark:bg-blue-900 ring-2 ring-blue-500': company.isActive }"
+                                         @click="setFilter('company', company.fullName)">
                                         <div class="w-9 h-9 flex-shrink-0">
                                             <div :class="getCompanyIconClass(index)" class="rounded-xl w-9 h-9 flex justify-center items-center">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +204,10 @@
                             </div>
                             <div class="flex-1 overflow-y-auto max-h-80 pr-2" v-if="topCities.length > 0">
                                 <div class="space-y-4">
-                                    <div v-for="(city, index) in topCities" :key="index" class="flex items-center">
+                                    <div v-for="(city, index) in topCities" :key="index" 
+                                         class="flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+                                         :class="{ 'bg-blue-50 dark:bg-blue-900 ring-2 ring-blue-500': city.isActive }"
+                                         @click="setFilter('city', city.fullName)">
                                         <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 flex-shrink-0">
                                             <div :class="getCityIconClass(index)" class="rounded-full w-9 h-9 grid place-content-center">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +254,10 @@
                             </div>
                             <div class="flex-1 overflow-y-auto max-h-96 pr-2" v-if="topTasks.length > 0">
                                 <div class="space-y-4">
-                                    <div v-for="(task, index) in topTasks" :key="index" class="flex items-center">
+                                    <div v-for="(task, index) in topTasks" :key="index" 
+                                         class="flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+                                         :class="{ 'bg-blue-50 dark:bg-blue-900 ring-2 ring-blue-500': task.isActive }"
+                                         @click="setFilter('task', task.fullName)">
                                         <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 flex-shrink-0">
                                             <div :class="getTaskIconClass(index)" class="rounded-full w-9 h-9 grid place-content-center">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -259,7 +297,13 @@
                             <div class="h-96 flex items-center justify-center" v-if="topTitles.length > 0">
                                 <div class="w-full max-w-xs">
                                     <div class="space-y-3">
-                                        <div v-for="(title, index) in topTitles" :key="index" class="flex items-center justify-between p-3 rounded-lg" :class="getTitleIconClass(index).replace('w-9 h-9', '').replace('rounded-full', 'rounded-lg').replace('grid place-content-center', '')">
+                                        <div v-for="(title, index) in topTitles" :key="index" 
+                                             class="flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+                                             :class="[
+                                                getTitleIconClass(index).replace('w-9 h-9', '').replace('rounded-full', 'rounded-lg').replace('grid place-content-center', ''),
+                                                { 'ring-2 ring-blue-500': title.isActive }
+                                             ]"
+                                             @click="setFilter('title', title.fullName)">
                                             <div class="flex items-center flex-1">
                                                 <div class="w-3 h-3 rounded-full mr-3" :class="getTitleGradientClass(index)"></div>
                                                 <span class="font-medium text-sm">{{ title.fullName }}</span>
@@ -292,7 +336,7 @@
                                         <h6 class="font-semibold text-center text-xs">Alt Yüklenici Sayısı</h6>
                                     </div>
                                     <div class="text-center bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900 dark:to-red-900 rounded-lg p-2 flex flex-col justify-center h-20">
-                                        <div class="text-2xl font-bold text-red-600 dark:text-red-400">{{ udmTeamData.length }}</div>
+                                        <div class="text-2xl font-bold text-red-600 dark:text-red-400">{{ filteredData.length }}</div>
                                         <div class="text-xs text-red-500 dark:text-red-300 font-medium">Toplam Personel</div>
                                     </div>
                                 </div>
@@ -305,8 +349,12 @@
                                     <div class="h-76 overflow-y-auto pr-2" v-if="topContracts.length > 0">
                                         <div class="space-y-3">
                                             <div v-for="(contract, index) in topContracts" :key="index" 
-                                                 class="flex items-center justify-between p-2 rounded-lg" 
-                                                 :class="getContractIconClass(index).replace('w-9 h-9', '').replace('rounded-full', 'rounded-lg').replace('grid place-content-center', '')">
+                                                 class="flex items-center justify-between p-2 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+                                                 :class="[
+                                                    getContractIconClass(index).replace('w-9 h-9', '').replace('rounded-full', 'rounded-lg').replace('grid place-content-center', ''),
+                                                    { 'ring-2 ring-blue-500': contract.isActive }
+                                                 ]"
+                                                 @click="setFilter('contract', contract.fullName)">
                                                 <div class="flex items-center flex-1">
                                                     <div class="w-3 h-3 rounded-full mr-2" :class="getContractGradientClass(index)"></div>
                                                     <span class="font-medium text-sm" :title="contract.fullName">{{ contract.name }}</span>
@@ -336,35 +384,14 @@
                                     </div>
                                     <div class="h-96 overflow-y-auto">
                                         <div class="space-y-1">
-                                            <div v-for="contractor in contractors.slice(0, 25)" :key="contractor.id" 
-                                                 class="py-1 px-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded text-xs border-b border-gray-100 dark:border-gray-600">
-                                                <div class="font-medium text-gray-700 dark:text-gray-300 text-center">{{ formatName(contractor.yetkiliKisi) }}</div>
+                                            <div v-for="person in filteredPersons.slice(0, 50)" :key="person.fullName" 
+                                                 class="py-1 px-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded text-xs border-b border-gray-100 dark:border-gray-600 cursor-pointer transition-colors"
+                                                 :class="{ 'bg-blue-50 dark:bg-blue-900 ring-2 ring-blue-500': person.isActive }"
+                                                 @click="setFilter('person', person.fullName)">
+                                                <div class="font-medium text-gray-700 dark:text-gray-300 text-center">{{ formatName(person.fullName) }}</div>
                                             </div>
-                                            <div v-if="contractors.length === 0" class="space-y-1">
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Abdullah KULU</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Adnan ÇAKAR</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Ahmet DEMİR</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Ali Can YAVUZ</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Ali ÇOLAK</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Alperen GÜNEŞ</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Aytaç Ozan YAMAN</div>
-                                                </div>
-                                                <div class="py-1 px-2 text-xs border-b border-gray-100">
-                                                    <div class="font-medium text-gray-700 text-center">Bahadır ÇİÇEKLİ</div>
-                                                </div>
+                                            <div v-if="filteredPersons.length === 0" class="text-center py-4">
+                                                <div class="text-gray-500 text-sm">Filtre kriterlerine uygun kişi bulunamadı</div>
                                             </div>
                                         </div>
                                     </div>
@@ -414,6 +441,108 @@ interface Contractor {
 const contractors = ref<Contractor[]>([]);
 const udmTeamData = ref<any[]>([]);
 const lastUpdateTime = ref(new Date().toLocaleString('tr-TR'));
+
+// Filtreleme state'leri
+const activeFilters = ref<{
+    project: string | null;
+    company: string | null;
+    city: string | null;
+    task: string | null;
+    title: string | null;
+    contract: string | null;
+    person: string | null;
+}>({
+    project: null,
+    company: null,
+    city: null,
+    task: null,
+    title: null,
+    contract: null,
+    person: null
+});
+
+// Filtrelenmiş veri
+const filteredData = computed(() => {
+    let filtered = [...udmTeamData.value];
+    
+    // Proje filtresi
+    if (activeFilters.value.project) {
+        filtered = filtered.filter(person => person['Proje'] === activeFilters.value.project);
+    }
+    
+    // Firma filtresi
+    if (activeFilters.value.company) {
+        filtered = filtered.filter(person => person['AY Firma'] === activeFilters.value.company);
+    }
+    
+    // Şehir filtresi
+    if (activeFilters.value.city) {
+        filtered = filtered.filter(person => person['İkamet Edilen İl'] === activeFilters.value.city);
+    }
+    
+    // Görev filtresi
+    if (activeFilters.value.task) {
+        filtered = filtered.filter(person => person['Görev'] === activeFilters.value.task);
+    }
+    
+    // Ünvan filtresi
+    if (activeFilters.value.title) {
+        filtered = filtered.filter(person => person['Unvan'] === activeFilters.value.title);
+    }
+    
+    // Sözleşme türü filtresi
+    if (activeFilters.value.contract) {
+        filtered = filtered.filter(person => person['Sözleşme Türü \r\n(Odak-ELD/Personel Destek/Diğer)'] === activeFilters.value.contract);
+    }
+    
+    // Kişi filtresi
+    if (activeFilters.value.person) {
+        filtered = filtered.filter(person => person['Ad Soyad'] === activeFilters.value.person);
+    }
+    
+    return filtered;
+});
+
+// Filtreleri değiştirme fonksiyonları
+const setFilter = (type: keyof typeof activeFilters.value, value: string | null) => {
+    if (value && activeFilters.value[type] === value) {
+        // Aynı filtreye tıklanırsa filtreyi kaldır
+        activeFilters.value[type] = null;
+    } else {
+        // Yeni filtre uygula
+        activeFilters.value[type] = value;
+    }
+};
+
+const clearAllFilters = () => {
+    activeFilters.value = {
+        project: null,
+        company: null,
+        city: null,
+        task: null,
+        title: null,
+        contract: null,
+        person: null
+    };
+};
+
+// Aktif filtre sayısı
+const activeFilterCount = computed(() => {
+    return Object.values(activeFilters.value).filter(filter => filter !== null).length;
+});
+
+// Filtrelerin görüntülenmesi için computed
+const activeFiltersDisplay = computed(() => {
+    const filters: { type: string; value: string }[] = [];
+    if (activeFilters.value.project) filters.push({ type: 'Proje', value: activeFilters.value.project });
+    if (activeFilters.value.company) filters.push({ type: 'Firma', value: activeFilters.value.company });
+    if (activeFilters.value.city) filters.push({ type: 'Şehir', value: activeFilters.value.city });
+    if (activeFilters.value.task) filters.push({ type: 'Görev', value: activeFilters.value.task });
+    if (activeFilters.value.title) filters.push({ type: 'Ünvan', value: activeFilters.value.title });
+    if (activeFilters.value.contract) filters.push({ type: 'Sözleşme', value: activeFilters.value.contract });
+    if (activeFilters.value.person) filters.push({ type: 'Kişi', value: activeFilters.value.person });
+    return filters;
+});
 
 // Excel dosyasını okuma fonksiyonu
 const loadExcelData = async () => {
@@ -496,7 +625,7 @@ const projeSayisi = computed(() => {
 const udmTeamDistribution = computed(() => {
     const distribution: { [key: string]: number } = {};
     
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         const team = person['İlgili UDM Ekibi'];
         if (team) {
             distribution[team] = (distribution[team] || 0) + 1;
@@ -510,7 +639,7 @@ const udmTeamDistribution = computed(() => {
 const projectDistribution = computed(() => {
     const distribution: { [key: string]: number } = {};
     
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         const project = person['Proje'];
         if (project) {
             distribution[project] = (distribution[project] || 0) + 1;
@@ -529,7 +658,8 @@ const topProjects = computed(() => {
             name: name.length > 25 ? name.substring(0, 25) + '...' : name,
             fullName: name,
             count: count,
-            percentage: Math.round((count / udmTeamData.value.length) * 100)
+            percentage: Math.round((count / filteredData.value.length) * 100),
+            isActive: activeFilters.value.project === name
         }));
 });
 
@@ -537,7 +667,7 @@ const topProjects = computed(() => {
 const companyDistribution = computed(() => {
     const distribution: { [key: string]: number } = {};
     
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         const company = person['AY Firma'];
         if (company) {
             distribution[company] = (distribution[company] || 0) + 1;
@@ -556,7 +686,8 @@ const topCompanies = computed(() => {
             name: name.length > 25 ? name.substring(0, 25) + '...' : name,
             fullName: name,
             count: count,
-            percentage: Math.round((count / udmTeamData.value.length) * 100)
+            percentage: Math.round((count / filteredData.value.length) * 100),
+            isActive: activeFilters.value.company === name
         }));
 });
 
@@ -564,7 +695,7 @@ const topCompanies = computed(() => {
 const cityDistribution = computed(() => {
     const distribution: { [key: string]: number } = {};
     
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         const city = person['İkamet Edilen İl'];
         if (city) {
             // Şehir adını normalize et (büyük/küçük harf ve boşluk sorunları için)
@@ -587,16 +718,17 @@ const topCities = computed(() => {
             name: name.length > 20 ? name.substring(0, 20) + '...' : name,
             fullName: name,
             count: count,
-            percentage: Math.round((count / udmTeamData.value.length) * 100)
+            percentage: Math.round((count / filteredData.value.length) * 100),
+            isActive: activeFilters.value.city === name
         }));
 });
 
 // Görev dağılımı computed property
 const taskDistribution = computed(() => {
-    if (!udmTeamData.value.length) return {};
+    if (!filteredData.value.length) return {};
     
     const distribution = {};
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         const task = person['Görev'];
         if (task) {
             distribution[task] = (distribution[task] || 0) + 1;
@@ -614,16 +746,17 @@ const topTasks = computed(() => {
             name: name.length > 20 ? name.substring(0, 20) + '...' : name,
             fullName: name,
             count: count as number,
-            percentage: Math.round(((count as number) / udmTeamData.value.length) * 100)
+            percentage: Math.round(((count as number) / filteredData.value.length) * 100),
+            isActive: activeFilters.value.task === name
         }));
 });
 
 // Ünvan dağılımı computed property
 const titleDistribution = computed(() => {
-    if (!udmTeamData.value.length) return {};
+    if (!filteredData.value.length) return {};
     
     const distribution = {};
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         const title = person['Unvan'];
         if (title) {
             distribution[title] = (distribution[title] || 0) + 1;
@@ -641,16 +774,17 @@ const topTitles = computed(() => {
             name: name.length > 20 ? name.substring(0, 20) + '...' : name,
             fullName: name,
             count: count as number,
-            percentage: Math.round(((count as number) / udmTeamData.value.length) * 100)
+            percentage: Math.round(((count as number) / filteredData.value.length) * 100),
+            isActive: activeFilters.value.title === name
         }));
 });
 
 // Sözleşme türü dağılımı computed property
 const contractDistribution = computed(() => {
-    if (!udmTeamData.value.length) return {};
+    if (!filteredData.value.length) return {};
     
     const distribution = {};
-    udmTeamData.value.forEach(person => {
+    filteredData.value.forEach(person => {
         // E kolonu - Sözleşme Türü için tam alan adını kullan (Excel'de \r\n karakteri var)
         const contract = person['Sözleşme Türü \r\n(Odak-ELD/Personel Destek/Diğer)'];
         if (contract && contract.toString().trim()) {
@@ -671,11 +805,20 @@ const topContracts = computed(() => {
             name: name.length > 15 ? name.substring(0, 15) + '...' : name,
             fullName: name,
             count: count as number,
-            percentage: Math.round(((count as number) / udmTeamData.value.length) * 100)
+            percentage: Math.round(((count as number) / filteredData.value.length) * 100),
+            isActive: activeFilters.value.contract === name
         }));
     
     console.log('Top Contracts:', result);
     return result;
+});
+
+// Filtrelenmiş kişiler listesi
+const filteredPersons = computed(() => {
+    return filteredData.value.map(person => ({
+        fullName: person['Ad Soyad'] || '',
+        isActive: activeFilters.value.person === person['Ad Soyad']
+    }));
 });
 
 // Helper functions for project styling

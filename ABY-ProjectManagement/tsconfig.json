@@ -21,6 +21,13 @@
         "types": ["@intlify/unplugin-vue-i18n/messages", "node"]
     },
     "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+    "exclude": [
+        "src/views/apps/invoice/list.vue",
+        "src/views/apps/mailbox.vue", 
+        "src/views/apps/scrumboard.vue",
+        "src/views/apps/todolist.vue",
+        "src/views/widgets.vue"
+    ],
     "references": [
         {
             "path": "./tsconfig.node.json"

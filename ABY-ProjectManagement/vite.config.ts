@@ -18,6 +18,10 @@ export default defineConfig({
         port: 5175,
         host: true
     },
+    build: {
+        // Chunk size uyarısını sustur
+        chunkSizeWarningLimit: 2000
+    },
     optimizeDeps: {
         include: [],
     },

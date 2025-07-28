@@ -14,12 +14,20 @@
                         <p class="text-white/80 text-sm mt-1">Tüm projelerinizi tek yerden yönetin</p>
                     </div>
                 </div>
-                <button type="button" @click="createNewProject" class="btn bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 transition-all duration-300 transform hover:scale-105">
-                    <svg class="w-5 h-5 ltr:mr-2 rtl:ml-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Yeni Proje
-                </button>
+                <div class="flex gap-3">
+                    <button type="button" @click="exportData" class="btn bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5 ltr:mr-2 rtl:ml-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Dışa Aktar
+                    </button>
+                    <button type="button" @click="createNewProject" class="btn bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5 ltr:mr-2 rtl:ml-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Yeni Proje
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -162,14 +170,7 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ filteredProjects.length }} proje bulundu</p>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button class="btn btn-sm bg-blue-500 hover:bg-blue-600 text-white">
-                            <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            Dışa Aktar
-                        </button>
-                    </div>
+                    <!-- Dışa Aktar butonu kaldırıldı -->
                 </div>
             </div>
             <div class="table-responsive">
@@ -441,6 +442,20 @@ const clearFilters = () => {
 
 const createNewProject = () => {
     router.push('/yeni-proje');
+};
+
+const exportData = () => {
+    // Excel formatında dışa aktarma fonksiyonu
+    const worksheet = XLSX.utils.json_to_sheet(filteredProjects.value);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Proje Listesi');
+    
+    // Dosya adını tarih ile oluştur
+    const date = new Date().toISOString().split('T')[0];
+    const filename = `Proje_Listesi_${date}.xlsx`;
+    
+    // Dosyayı indir
+    XLSX.writeFile(workbook, filename);
 };
 
 const viewProject = (proje: any) => {

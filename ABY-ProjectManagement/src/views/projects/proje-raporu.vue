@@ -27,7 +27,7 @@
                         </svg>
                         Yeni Görev
                     </button>
-                    <button class="btn btn-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-300">
+                    <button @click="printReport" class="btn btn-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-300">
                             <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -145,36 +145,35 @@
                 <table class="table-hover custom-task-table min-w-full">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th class="w-16 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No</th>
-                            <th class="w-80 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">İş Adımı</th>
-                            <th class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sorumlu</th>
-                            <th class="w-28 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Proje</th>
-                            <th class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Başlangıç</th>
-                            <th class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hedef</th>
-                            <th class="w-24 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Durum</th>
-                            <th class="w-96 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Açıklama</th>
-                            <th class="w-32 px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">İşlemler</th>
+                            <th class="w-12 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No</th>
+                            <th class="w-64 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">İş Adımı</th>
+                            <th class="w-24 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sorumlu</th>
+                            <th class="w-20 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Proje</th>
+                            <th class="w-24 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Başlangıç</th>
+                            <th class="w-24 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hedef</th>
+                            <th class="w-20 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Durum</th>
+                            <th class="w-64 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Açıklama</th>
+                            <th class="w-24 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Son Güncelleme</th>
+                            <th class="w-24 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Güncelleyen</th>
+                            <th class="w-24 px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <tr v-for="(task, index) in filteredTasks" :key="task.id" class="align-top hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <td class="w-16 px-4 py-4 text-center">
-                                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <td class="w-12 px-2 py-3 text-center">
+                                <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
                                     {{ index + 1 }}
                                 </div>
-                            </td>                            <td class="w-80 px-4 py-4">
-                                <div v-if="!task.isEditing" class="cursor-pointer word-wrap-cell p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200" @click="editTask(task)">
+                            </td>                            <td class="w-64 px-3 py-3">
+                                <div v-if="!task.isEditing" class="cursor-pointer word-wrap-cell p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors duration-200 text-sm" @click="editTask(task)">
                                     {{ task.isAdimi }}
                                 </div>
-                                <textarea v-else v-model="task.isAdimi" class="form-textarea w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" rows="3" @blur="saveTask(task)" @keydown.ctrl.enter="saveTask(task)"></textarea>
-                            </td><td class="w-32 px-4 py-4">
-                                <div v-if="!task.isEditing" class="flex items-center">
-                                    <div class="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3">
-                                        {{ task.sorumlu.split(' ').map(n => n[0]).join('').substring(0, 2) }}
-                                    </div>
-                                    <div class="word-wrap-cell">{{ task.sorumlu }}</div>
+                                <textarea v-else v-model="task.isAdimi" class="form-textarea w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm" rows="2" @blur="saveTask(task)" @keydown.ctrl.enter="saveTask(task)"></textarea>
+                            </td><td class="w-24 px-2 py-3">
+                                <div v-if="!task.isEditing" class="text-sm">
+                                    <div class="word-wrap-cell truncate" :title="task.sorumlu">{{ task.sorumlu }}</div>
                                 </div>
-                                <select v-else v-model="task.sorumlu" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)">
+                                <select v-else v-model="task.sorumlu" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm w-full" @change="saveTask(task)" @blur="saveTask(task)">
                                     <option value="Rabia GEVREK">Rabia GEVREK</option>
                                     <option value="Özkan ABDİK">Özkan ABDİK</option>
                                     <option value="Regaip BABAYİĞİT">Regaip BABAYİĞİT</option>
@@ -183,59 +182,77 @@
                                     <option value="Gülşah KARAKÖSE">Gülşah KARAKÖSE</option>
                                 </select>
                             </td>
-                            <td class="w-28 px-4 py-4">
+                            <td class="w-20 px-2 py-3">
                                 <div v-if="!task.isEditing" class="text-center">
-                                    <div class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                    <div class="inline-flex items-center px-1 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                         {{ task.ilgiliProje }}
                                     </div>
                                 </div>
-                                <select v-else v-model="task.ilgiliProje" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)">
+                                <select v-else v-model="task.ilgiliProje" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm w-full" @change="saveTask(task)" @blur="saveTask(task)">
                                     <option value="P5855924">P5855924</option>
                                     <option value="P5654941">P5654941</option>
                                     <option value="P5836361">P5836361</option>
                                     <option value="P5971441">P5971441</option>
                                 </select>
                             </td>
-                            <td class="w-32 px-4 py-4">
-                                <div v-if="!task.isEditing" class="text-center text-sm text-gray-600 dark:text-gray-400">{{ formatDate(task.baslangicTarihi) }}</div>
-                                <input v-else type="date" v-model="task.baslangicTarihi" class="form-input bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)" />
+                            <td class="w-24 px-2 py-3">
+                                <div v-if="!task.isEditing" class="text-center text-xs text-gray-600 dark:text-gray-400">{{ formatDate(task.baslangicTarihi) }}</div>
+                                <input v-else type="date" v-model="task.baslangicTarihi" class="form-input bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm w-full" @change="saveTask(task)" @blur="saveTask(task)" />
                             </td>
-                            <td class="w-32 px-4 py-4">
-                                <div v-if="!task.isEditing" class="text-center text-sm text-gray-600 dark:text-gray-400">{{ formatDate(task.hedefTarih) }}</div>
-                                <input v-else type="date" v-model="task.hedefTarih" class="form-input bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)" />
-                            </td>                            <td class="w-24 px-4 py-4 text-center">
+                            <td class="w-24 px-2 py-3">
+                                <div v-if="!task.isEditing" class="text-center text-xs text-gray-600 dark:text-gray-400">{{ formatDate(task.hedefTarih) }}</div>
+                                <input v-else type="date" v-model="task.hedefTarih" class="form-input bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm w-full" @change="saveTask(task)" @blur="saveTask(task)" />
+                            </td>                            <td class="w-20 px-2 py-3 text-center">
                                 <div v-if="!task.isEditing" class="cursor-pointer" @click="editTask(task)">
                                     <div class="flex items-center justify-center">
-                                        <div class="w-2 h-2 rounded-full mr-2" :class="task.durum === 'Açık' ? 'bg-green-500' : 'bg-red-500'"></div>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium" :class="getDurumBadgeClass(task.durum)">
+                                        <div class="w-2 h-2 rounded-full mr-1" :class="task.durum === 'Açık' ? 'bg-green-500' : 'bg-red-500'"></div>
+                                        <span class="inline-flex items-center px-1 py-1 rounded text-xs font-medium" :class="getDurumBadgeClass(task.durum)">
                                             {{ task.durum }}
                                         </span>
                                     </div>
                                 </div>
-                                <select v-else v-model="task.durum" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" @change="saveTask(task)" @blur="saveTask(task)">
+                                <select v-else v-model="task.durum" class="form-select bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm w-full" @change="saveTask(task)" @blur="saveTask(task)">
                                     <option value="Açık">Açık</option>
                                     <option value="Kapalı">Kapalı</option>
                                 </select>
-                            </td>                            <td class="w-96 px-4 py-4">
-                                <div v-if="!task.isEditing" class="cursor-pointer word-wrap-cell p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200" @click="editTask(task)">
+                            </td>                            <td class="w-64 px-3 py-3">
+                                <div v-if="!task.isEditing" class="cursor-pointer word-wrap-cell p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors duration-200 text-sm" @click="editTask(task)">
                                     {{ task.aciklama }}
                                 </div>
-                                <textarea v-else v-model="task.aciklama" class="form-textarea w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg" rows="3" @blur="saveTask(task)" @keydown.ctrl.enter="saveTask(task)" @keydown.enter.stop></textarea>
+                                <textarea v-else v-model="task.aciklama" class="form-textarea w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 rounded text-sm" rows="2" @blur="saveTask(task)" @keydown.ctrl.enter="saveTask(task)" @keydown.enter.stop></textarea>
                             </td>
-                            <td class="w-32 px-4 py-4">
-                                <div class="flex gap-2 justify-center">
-                                    <button v-if="!task.isEditing" type="button" @click="editTask(task)" class="btn btn-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105" title="Düzenle">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <td class="w-24 px-2 py-3">
+                                <div class="text-center text-xs">
+                                    <div class="text-gray-600 dark:text-gray-400 font-medium">{{ formatDateTime(task.sonGuncelleme || task.olusturmaTarihi) }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">{{ formatTime(task.sonGuncelleme || task.olusturmaTarihi) }}</div>
+                                </div>
+                            </td>
+                            <td class="w-24 px-2 py-3">
+                                <div class="text-center">
+                                    <div class="inline-flex items-center">
+                                        <div class="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xs mr-1">
+                                            {{ (task.guncelleyenKisi || 'Admin Kullanıcısı').split(' ').map(n => n[0]).join('').substring(0, 2) }}
+                                        </div>
+                                        <div class="text-xs">
+                                            <div class="font-medium text-gray-700 dark:text-gray-300 truncate" :title="task.guncelleyenKisi || 'Admin Kullanıcısı'">{{ (task.guncelleyenKisi || 'Admin Kullanıcısı').split(' ')[0] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="w-24 px-2 py-3">
+                                <div class="flex gap-1 justify-center">
+                                    <button v-if="!task.isEditing" type="button" @click="editTask(task)" class="btn btn-sm bg-orange-500 hover:bg-orange-600 text-white rounded transition-all duration-300 transform hover:scale-105 p-1" title="Düzenle">
+                                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M15.2869 3.15178L14.3601 4.07866L5.83882 12.5999L5.83881 12.5999C5.26166 13.1771 4.97308 13.4656 4.7249 13.7838C4.43213 14.1592 4.18114 14.5653 3.97634 14.995C3.80273 15.3593 3.67368 15.7465 3.41556 16.5208L2.32181 19.8021L2.05445 20.6042C1.92743 20.9852 2.0266 21.4053 2.31063 21.6894C2.59466 21.9734 3.01478 22.0726 3.39584 21.9456L4.19792 21.6782L7.47918 20.5844L7.47919 20.5844C8.25353 20.3263 8.6407 20.1972 9.00498 20.0236C9.43469 19.8188 9.84082 19.5678 10.2162 19.2751C10.5344 19.0269 10.8229 18.7383 11.4001 18.1612L11.4001 18.1612L19.9213 9.63993L20.8482 8.71306C22.3839 7.17735 22.3839 4.68748 20.8482 3.15178C19.3125 1.61607 16.8226 1.61607 15.2869 3.15178Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </button>
-                                    <button v-else type="button" @click="saveTask(task)" class="btn btn-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105" title="Kaydet">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <button v-else type="button" @click="saveTask(task)" class="btn btn-sm bg-green-500 hover:bg-green-600 text-white rounded transition-all duration-300 transform hover:scale-105 p-1" title="Kaydet">
+                                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </button>
-                                    <button type="button" @click="deleteTask(task.id)" class="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105" title="Sil">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <button type="button" @click="deleteTask(task.id)" class="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded transition-all duration-300 transform hover:scale-105 p-1" title="Sil">
+                                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </button>
@@ -243,7 +260,7 @@
                             </td>
                         </tr>
                         <tr v-if="filteredTasks.length === 0">
-                            <td colspan="9" class="text-center py-12">
+                            <td colspan="11" class="text-center py-12">
                                 <div class="flex flex-col items-center">
                                     <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -435,6 +452,9 @@ const tasks = ref([
         hedefTarih: '2025-07-25',
         durum: 'Açık',
         aciklama: '2 Eyl\nKonu takipte.',
+        olusturmaTarihi: '2025-07-01T09:30:00',
+        sonGuncelleme: '2025-07-15T14:20:00',
+        guncelleyenKisi: 'Rabia GEVREK',
         isEditing: false
     },
     {
@@ -446,6 +466,9 @@ const tasks = ref([
         hedefTarih: '2025-07-15',
         durum: 'Kapalı',
         aciklama: 'Mali işlere konu aktarılacak.\nTamamlandı.',
+        olusturmaTarihi: '2025-07-01T10:15:00',
+        sonGuncelleme: '2025-07-20T16:45:00',
+        guncelleyenKisi: 'Admin Kullanıcısı',
         isEditing: false
     },
     {
@@ -457,6 +480,9 @@ const tasks = ref([
         hedefTarih: '2025-07-08',
         durum: 'Açık',
         aciklama: 'Tablet GÜLASŞ UMSG\'ye hediye edilmesi konusu proje ile konuşulacak.\nAraştırma devam ediyor.',
+        olusturmaTarihi: '2025-07-08T11:00:00',
+        sonGuncelleme: '2025-07-18T13:30:00',
+        guncelleyenKisi: 'Özkan ABDİK',
         isEditing: false
     },
     {
@@ -468,6 +494,9 @@ const tasks = ref([
         hedefTarih: '2025-07-08',
         durum: 'Kapalı',
         aciklama: 'Diğer projeler için ilgili arkadaşlara öğretilecek.\nEğitim tamamlandı.',
+        olusturmaTarihi: '2025-07-08T08:45:00',
+        sonGuncelleme: '2025-07-25T10:15:00',
+        guncelleyenKisi: 'Regaip BABAYİĞİT',
         isEditing: false
     },
     {
@@ -479,6 +508,9 @@ const tasks = ref([
         hedefTarih: '2025-06-24',
         durum: 'Açık',
         aciklama: '25 Mayıs\'ta Radsan toplantısı yapılacak.\nBölgeden örnek lokasyonlar belirlenecek, gönderilenecek.\nToplantı planlanıyor.',
+        olusturmaTarihi: '2025-06-24T15:20:00',
+        sonGuncelleme: '2025-07-10T09:30:00',
+        guncelleyenKisi: 'Mustafa ÇAKIR',
         isEditing: false
     },
     {
@@ -490,6 +522,9 @@ const tasks = ref([
         hedefTarih: '2025-07-08',
         durum: 'Açık',
         aciklama: 'Hurda olarak belirtilen cihazların gönderilmesi takip edilecek.\nLojistik koordinasyonu yapılıyor.',
+        olusturmaTarihi: '2025-06-13T12:00:00',
+        sonGuncelleme: '2025-07-22T14:45:00',
+        guncelleyenKisi: 'Admin Kullanıcısı',
         isEditing: false
     },
     {
@@ -501,6 +536,9 @@ const tasks = ref([
         hedefTarih: '2025-01-08',
         durum: 'Kapalı',
         aciklama: 'Yıl sonunu beklemeden geçiş çalışmaları başlatılacaktır.\nGeçiş tamamlandı.\nDokümantasyon hazırlandı.',
+        olusturmaTarihi: '2025-01-08T10:30:00',
+        sonGuncelleme: '2025-07-27T16:20:00',
+        guncelleyenKisi: 'Emel ÇANKAYA',
         isEditing: false
     },
     {
@@ -512,6 +550,9 @@ const tasks = ref([
         hedefTarih: '2025-06-05',
         durum: 'Açık',
         aciklama: 'Proje Bütçesi/Arıza kayıt sayıları olarak tablo üzerinden değerlendirme yapılacaktır.\nAnaliz devam ediyor.',
+        olusturmaTarihi: '2025-06-18T09:15:00',
+        sonGuncelleme: '2025-07-28T11:30:00',
+        guncelleyenKisi: 'Gülşah KARAKÖSE',
         isEditing: false
     }
 ]);
@@ -539,6 +580,18 @@ const formatDate = (dateString: string) => {
     return date.toLocaleDateString('tr-TR');
 };
 
+const formatDateTime = (dateTimeString: string) => {
+    if (!dateTimeString) return '';
+    const date = new Date(dateTimeString);
+    return date.toLocaleDateString('tr-TR');
+};
+
+const formatTime = (dateTimeString: string) => {
+    if (!dateTimeString) return '';
+    const date = new Date(dateTimeString);
+    return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+};
+
 const getDurumBadgeClass = (durum: string) => {
     return durum === 'Açık' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
 };
@@ -560,6 +613,8 @@ const editTask = (task: any) => {
 
 const saveTask = (task: any) => {
     task.isEditing = false;
+    task.sonGuncelleme = new Date().toISOString();
+    task.guncelleyenKisi = 'Admin Kullanıcısı'; // Gerçek uygulamada oturum açmış kullanıcı
     // Burada API çağrısı yapılabilir
 };
 
@@ -587,9 +642,13 @@ const addNewTask = () => {
 
 const saveNewTask = () => {
     const nextId = Math.max(...tasks.value.map(t => t.id)) + 1;
+    const now = new Date().toISOString();
     tasks.value.push({
         id: nextId,
         ...newTask.value,
+        olusturmaTarihi: now,
+        sonGuncelleme: now,
+        guncelleyenKisi: 'Admin Kullanıcısı',
         isEditing: false
     });
     showAddModal.value = false;
@@ -597,6 +656,225 @@ const saveNewTask = () => {
 
 const cancelAddTask = () => {
     showAddModal.value = false;
+};
+
+const printReport = () => {
+    // Yazdırma için özel CSS ile bir popup açıyoruz
+    const printWindow = window.open('', '_blank');
+    const printContent = generatePrintContent();
+    
+    printWindow?.document.write(printContent);
+    printWindow?.document.close();
+    printWindow?.focus();
+    printWindow?.print();
+    printWindow?.close();
+};
+
+const generatePrintContent = () => {
+    const today = new Date().toLocaleDateString('tr-TR');
+    const currentTime = new Date().toLocaleTimeString('tr-TR');
+    
+    let tableRows = '';
+    filteredTasks.value.forEach((task, index) => {
+        const durumClass = task.durum === 'Açık' ? 'status-open' : 'status-closed';
+        tableRows += `
+            <tr>
+                <td class="text-center">${index + 1}</td>
+                <td class="task-text">${task.isAdimi}</td>
+                <td class="text-center">${task.sorumlu}</td>
+                <td class="text-center">${task.ilgiliProje}</td>
+                <td class="text-center">${formatDate(task.baslangicTarihi)}</td>
+                <td class="text-center">${formatDate(task.hedefTarih)}</td>
+                <td class="text-center"><span class="${durumClass}">${task.durum}</span></td>
+                <td class="task-text">${task.aciklama}</td>
+                <td class="text-center">${formatDateTime(task.sonGuncelleme || task.olusturmaTarihi)}<br><small>${formatTime(task.sonGuncelleme || task.olusturmaTarihi)}</small></td>
+                <td class="text-center">${task.guncelleyenKisi || 'Admin Kullanıcısı'}</td>
+            </tr>
+        `;
+    });
+
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Genel Takip - Görev Listesi Raporu</title>
+            <style>
+                @media print {
+                    body { margin: 0; }
+                    @page { margin: 1cm; }
+                }
+                
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                    line-height: 1.4;
+                    color: #333;
+                }
+                
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    border-bottom: 2px solid #333;
+                    padding-bottom: 10px;
+                }
+                
+                .header h1 {
+                    margin: 0 0 5px 0;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                
+                .header h2 {
+                    margin: 0 0 10px 0;
+                    font-size: 14px;
+                    color: #666;
+                }
+                
+                .report-info {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 20px;
+                    font-size: 11px;
+                }
+                
+                .filters-info {
+                    margin-bottom: 15px;
+                    font-size: 11px;
+                    background-color: #f8f9fa;
+                    padding: 8px;
+                    border-radius: 4px;
+                }
+                
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                }
+                
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 6px;
+                    vertical-align: top;
+                }
+                
+                th {
+                    background-color: #f8f9fa;
+                    font-weight: bold;
+                    text-align: center;
+                    font-size: 11px;
+                }
+                
+                .task-text {
+                    word-wrap: break-word;
+                    word-break: break-word;
+                    white-space: pre-wrap;
+                    max-width: 200px;
+                }
+                
+                .text-center {
+                    text-align: center;
+                }
+                
+                .status-open {
+                    background-color: #d4edda;
+                    color: #155724;
+                    padding: 2px 6px;
+                    border-radius: 3px;
+                    font-size: 10px;
+                    font-weight: bold;
+                }
+                
+                .status-closed {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                    padding: 2px 6px;
+                    border-radius: 3px;
+                    font-size: 10px;
+                    font-weight: bold;
+                }
+                
+                .footer {
+                    margin-top: 30px;
+                    text-align: center;
+                    font-size: 10px;
+                    color: #666;
+                    border-top: 1px solid #ddd;
+                    padding-top: 10px;
+                }
+                
+                .summary {
+                    background-color: #e9ecef;
+                    padding: 10px;
+                    border-radius: 4px;
+                    margin-bottom: 15px;
+                    font-size: 11px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>UGES Entegre Lojistik Destek Direktörlüğü</h1>
+                <h2>Genel Takip - Görev Listesi Raporu</h2>
+            </div>
+            
+            <div class="report-info">
+                <div><strong>Rapor Tarihi:</strong> ${today}</div>
+                <div><strong>Rapor Saati:</strong> ${currentTime}</div>
+                <div><strong>Toplam Görev:</strong> ${filteredTasks.value.length}</div>
+            </div>
+            
+            <div class="summary">
+                <strong>Durum Özeti:</strong> 
+                Açık: ${filteredTasks.value.filter(t => t.durum === 'Açık').length} | 
+                Kapalı: ${filteredTasks.value.filter(t => t.durum === 'Kapalı').length}
+            </div>
+            
+            ${getActiveFiltersInfo()}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">No</th>
+                        <th style="width: 250px;">İş Adımı</th>
+                        <th style="width: 100px;">Sorumlu</th>
+                        <th style="width: 70px;">Proje</th>
+                        <th style="width: 70px;">Başlangıç</th>
+                        <th style="width: 70px;">Hedef</th>
+                        <th style="width: 50px;">Durum</th>
+                        <th style="width: 180px;">Açıklama</th>
+                        <th style="width: 80px;">Son Güncelleme</th>
+                        <th style="width: 100px;">Güncelleyen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+            
+            <div class="footer">
+                Bu rapor ${today} tarihinde ${currentTime} saatinde oluşturulmuştur.
+            </div>
+        </body>
+        </html>
+    `;
+};
+
+const getActiveFiltersInfo = () => {
+    const activeFilters: string[] = [];
+    if (filters.value.isAdimi) activeFilters.push(`İş Adımı: "${filters.value.isAdimi}"`);
+    if (filters.value.sorumlu) activeFilters.push(`Sorumlu: "${filters.value.sorumlu}"`);
+    if (filters.value.ilgiliProje) activeFilters.push(`Proje: "${filters.value.ilgiliProje}"`);
+    if (filters.value.durum) activeFilters.push(`Durum: "${filters.value.durum}"`);
+    
+    if (activeFilters.length > 0) {
+        return `
+            <div class="filters-info">
+                <strong>Uygulanan Filtreler:</strong> ${activeFilters.join(' | ')}
+            </div>
+        `;
+    }
+    return '';
 };
 </script>
 

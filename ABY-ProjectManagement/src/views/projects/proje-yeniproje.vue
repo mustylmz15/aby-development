@@ -723,7 +723,7 @@ const form = ref({
     slaMudahaleSuresi: '',
     slaOnarimSuresi: '',
     projeAciklamasi: '',
-    egitimDurumu: '',
+    egitimDurumu: 'Planlanmadı',
     eBaslangicTarihi: '',
     eTamamlanmaTarihi: '',
     egitimSuresi: '',
