@@ -68,16 +68,16 @@
                             <circle cx="50" cy="50" r="35" fill="none" stroke="#e5e7eb" stroke-width="8" opacity="0.3"/>
                             <!-- İlerleme çemberleri -->
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient1)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectStats.delayed / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectStats.delayed / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out"/>
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient2)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectStats.ontrack / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectStats.ontrack / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out" 
-                                    :style="{ transform: 'rotate(' + (projectStats.delayed * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
+                                    :style="{ transform: 'rotate(' + (realProjectStats.delayed * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient3)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectStats.completed / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectStats.completed / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out" 
-                                    :style="{ transform: 'rotate(' + ((projectStats.delayed + projectStats.ontrack) * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
+                                    :style="{ transform: 'rotate(' + ((realProjectStats.delayed + realProjectStats.ontrack) * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
                             <!-- Gradients -->
                             <defs>
                                 <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -96,46 +96,46 @@
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="text-center">
-                                <div class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{{ formatNumber(totalProjects) }}</div>
+                                <div class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{{ formatNumber(realTotalProjects) }}</div>
                                 <div class="text-sm text-gray-500 dark:text-gray-400 font-medium">Toplam Proje</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800">
+                    <div @click="openProjectModal('delayed')" class="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800 cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-red-500 to-pink-500 shadow-lg"></div>
                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Proje Takvimi Gecikmede</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-red-600 dark:text-red-400">{{ projectStats.delayed }}%</span>
+                            <span class="text-sm font-bold text-red-600 dark:text-red-400">{{ realProjectStats.delayed }}%</span>
                             <div class="w-12 h-2 bg-red-200 dark:bg-red-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-red-500 to-pink-500 rounded-full transition-all duration-1000" :style="{ width: projectStats.delayed + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-red-500 to-pink-500 rounded-full transition-all duration-1000" :style="{ width: realProjectStats.delayed + '%' }"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                    <div @click="openProjectModal('ontrack')" class="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800 cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg"></div>
                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Proje Takvimine Uygun İlerliyor</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-green-600 dark:text-green-400">{{ projectStats.ontrack }}%</span>
+                            <span class="text-sm font-bold text-green-600 dark:text-green-400">{{ realProjectStats.ontrack }}%</span>
                             <div class="w-12 h-2 bg-green-200 dark:bg-green-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-1000" :style="{ width: projectStats.ontrack + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-1000" :style="{ width: realProjectStats.ontrack + '%' }"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                    <div @click="openProjectModal('completed')" class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800 cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg"></div>
                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Proje Tamamlandı</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ projectStats.completed }}%</span>
+                            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ realProjectStats.completed }}%</span>
                             <div class="w-12 h-2 bg-purple-200 dark:bg-purple-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-1000" :style="{ width: projectStats.completed + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-1000" :style="{ width: realProjectStats.completed + '%' }"></div>
                             </div>
                         </div>
                     </div>
@@ -164,20 +164,20 @@
                             <circle cx="50" cy="50" r="35" fill="none" stroke="#e5e7eb" stroke-width="8" opacity="0.3"/>
                             <!-- Dağılım çemberleri -->
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient4)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectDistribution.eld / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectDistribution.eld / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out"/>
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient5)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectDistribution.security / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectDistribution.security / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out" 
-                                    :style="{ transform: 'rotate(' + (projectDistribution.eld * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
+                                    :style="{ transform: 'rotate(' + (realProjectDistribution.eld * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient6)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectDistribution.health / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectDistribution.health / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out" 
-                                    :style="{ transform: 'rotate(' + ((projectDistribution.eld + projectDistribution.security) * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
+                                    :style="{ transform: 'rotate(' + ((realProjectDistribution.eld + realProjectDistribution.security) * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
                             <circle cx="50" cy="50" r="35" fill="none" stroke="url(#gradient7)" stroke-width="8" 
-                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * projectDistribution.transport / 100)" 
+                                    stroke-dasharray="219.8" :stroke-dashoffset="219.8 - (219.8 * realProjectDistribution.transport / 100)" 
                                     stroke-linecap="round" class="transition-all duration-1000 ease-out" 
-                                    :style="{ transform: 'rotate(' + ((projectDistribution.eld + projectDistribution.security + projectDistribution.health) * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
+                                    :style="{ transform: 'rotate(' + ((realProjectDistribution.eld + realProjectDistribution.security + realProjectDistribution.health) * 3.6) + 'deg)', transformOrigin: '50% 50%' }"/>
                             <!-- Additional Gradients -->
                             <defs>
                                 <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -210,48 +210,48 @@
                     <div class="flex items-center justify-between p-3 bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 shadow-lg"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">ELD</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Entegre Lojistik Destek Program Direktörlüğü</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-cyan-600 dark:text-cyan-400">{{ projectDistribution.eld }}%</span>
+                            <span class="text-sm font-bold text-cyan-600 dark:text-cyan-400">{{ realProjectDistribution.eld }}%</span>
                             <div class="w-12 h-2 bg-cyan-200 dark:bg-cyan-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full transition-all duration-1000" :style="{ width: projectDistribution.eld + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full transition-all duration-1000" :style="{ width: realProjectDistribution.eld + '%' }"></div>
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-teal-600 to-cyan-600 shadow-lg"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Güvenlik Sistemleri</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Güvenlik Sistemleri Program Direktörlüğü</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-teal-600 dark:text-teal-400">{{ projectDistribution.security }}%</span>
+                            <span class="text-sm font-bold text-teal-600 dark:text-teal-400">{{ realProjectDistribution.security }}%</span>
                             <div class="w-12 h-2 bg-teal-200 dark:bg-teal-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full transition-all duration-1000" :style="{ width: projectDistribution.security + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full transition-all duration-1000" :style="{ width: realProjectDistribution.security + '%' }"></div>
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Sağlık Sistemleri</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Tasarım Mühendisliği Direktörlüğü</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ projectDistribution.health }}%</span>
+                            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ realProjectDistribution.health }}%</span>
                             <div class="w-12 h-2 bg-purple-200 dark:bg-purple-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full transition-all duration-1000" :style="{ width: projectDistribution.health + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full transition-all duration-1000" :style="{ width: realProjectDistribution.health + '%' }"></div>
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
                         <div class="flex items-center space-x-3">
                             <div class="w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Ulaşım ve Enerji</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Ulaşım ve Enerji Sistemleri Program Direktörlüğü</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">{{ projectDistribution.transport }}%</span>
+                            <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">{{ realProjectDistribution.transport }}%</span>
                             <div class="w-12 h-2 bg-indigo-200 dark:bg-indigo-800 rounded-full">
-                                <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000" :style="{ width: projectDistribution.transport + '%' }"></div>
+                                <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000" :style="{ width: realProjectDistribution.transport + '%' }"></div>
                             </div>
                         </div>
                     </div>
@@ -573,12 +573,113 @@
             </div>
         </div>
     </div>
+
+    <!-- Proje Durumu Modal -->
+    <div v-if="showProjectModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+            <!-- Modal Header -->
+            <div :class="`bg-gradient-to-r p-6 text-white ${
+                getModalColor(modalProjectType) === 'red' ? 'from-red-500 to-pink-500' :
+                getModalColor(modalProjectType) === 'green' ? 'from-green-500 to-emerald-500' :
+                'from-purple-500 to-indigo-500'
+            }`">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">{{ getModalTitle(modalProjectType) }}</h3>
+                            <p class="text-white text-opacity-90 text-sm">{{ modalProjects.length }} proje listelendi</p>
+                        </div>
+                    </div>
+                    <button @click="closeProjectModal" class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center hover:bg-opacity-30 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <div v-if="modalProjects.length === 0" class="text-center py-8">
+                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400">Bu kategoride henüz proje bulunmuyor.</p>
+                </div>
+
+                <div v-else class="space-y-4">
+                    <div v-for="project in modalProjects" :key="project.projeKodu" 
+                         class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-200 dark:border-gray-600 hover:shadow-lg transition-all duration-300">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-full">
+                                        {{ project.projeKodu }}
+                                    </span>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white">{{ project.projeAdi || 'Proje Adı Belirtilmemiş' }}</h4>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium">Durum:</span>
+                                        <span :class="`px-2 py-1 rounded-full text-xs font-medium ${
+                                            project.projeGecikmeDurumu === 'Gecikmiş' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                                            project.projeGecikmeDurumu === 'Zamanında' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                            'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                                        }`">
+                                            {{ project.projeGecikmeDurumu }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium">Sorumlu Birim:</span>
+                                        <span class="text-xs bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded">{{ project.kurulumSorumluBirimi || 'Belirtilmemiş' }}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium">Garanti Başlangıç:</span>
+                                        <span>{{ project.garantiBaslangicTarihi || 'Belirtilmemiş' }}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium">Garanti Bitiş:</span>
+                                        <span>{{ project.garantiBitisTarihi || 'Belirtilmemiş' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">
+                        Toplam {{ modalProjects.length }} proje gösteriliyor
+                    </span>
+                    <div class="flex space-x-3">
+                        <button @click="goToProjectDetails" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200">
+                            Detay Gör
+                        </button>
+                        <button @click="closeProjectModal" class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors duration-200">
+                            Kapat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useExcel } from '@/composables/use-excel';
+import { useProjectStats } from '@/composables/use-project-stats';
 
 const currentYear = new Date().getFullYear();
 const totalProjects = ref(85);
@@ -595,6 +696,15 @@ const formatMillion = (num: number): string => {
 
 // Excel composable'ını kullan
 const { loadDashboardData } = useExcel();
+
+// Proje istatistikleri composable'ını kullan
+const { 
+    loadProjectsFromExcel, 
+    projectStats: realProjectStats, 
+    projectDistribution: realProjectDistribution,
+    totalProjects: realTotalProjects,
+    projects: allProjects  // Proje listesini de al
+} = useProjectStats();
 
 // Loading state
 const isLoadingExcel = ref(false);
@@ -642,6 +752,10 @@ const taskStats = ref({
 const loadExcelData = async () => {
     isLoadingExcel.value = true;
     try {
+        // Proje verilerini yükle
+        await loadProjectsFromExcel();
+        
+        // Diğer verileri yükle
         const data = await loadDashboardData();
         
         // Verileri güncelle
@@ -711,4 +825,73 @@ const progressPercentages = computed(() => {
         realizedDomestic: domesticOfRealizedPercentage.value            // 24M / 25M = %96 (gerçekleşen bütçeye göre)
     };
 });
+
+// Modal için state
+const showProjectModal = ref(false);
+const modalProjectType = ref('');
+const modalProjects = ref<any[]>([]);
+
+// Modal'ı açma fonksiyonu
+const openProjectModal = (projectType: string) => {
+    modalProjectType.value = projectType;
+    
+    // allProjects composable'dan gelen gerçek veriler
+    let filteredProjects: any[] = [];
+    
+    if (projectType === 'delayed') {
+        filteredProjects = allProjects.value.filter(p => p.projeGecikmeDurumu === 'Gecikmiş');
+    } else if (projectType === 'ontrack') {
+        filteredProjects = allProjects.value.filter(p => p.projeGecikmeDurumu === 'Zamanında');
+    } else if (projectType === 'completed') {
+        filteredProjects = allProjects.value.filter(p => p.projeGecikmeDurumu === 'Tamamlandı');
+    }
+    
+    modalProjects.value = filteredProjects;
+    showProjectModal.value = true;
+};
+
+// Modal'ı kapatma fonksiyonu
+const closeProjectModal = () => {
+    showProjectModal.value = false;
+    modalProjectType.value = '';
+    modalProjects.value = [];
+};
+
+// Proje detaylarına gitme fonksiyonu
+const goToProjectDetails = () => {
+    const statusMap = {
+        'delayed': 'Gecikmiş',
+        'ontrack': 'Zamanında',
+        'completed': 'Tamamlandı'
+    };
+    
+    const projectStatus = statusMap[modalProjectType.value as keyof typeof statusMap];
+    
+    closeProjectModal();
+    router.push({
+        path: '/proje-ozeti',
+        query: {
+            projeDurumu: projectStatus
+        }
+    });
+};
+
+// Modal başlık ve renk ayarları
+const getModalTitle = (type: string) => {
+    switch(type) {
+        case 'delayed': return 'Proje Takvimi Gecikmede';
+        case 'ontrack': return 'Proje Takvimine Uygun İlerliyor';
+        case 'completed': return 'Proje Tamamlandı';
+        default: return '';
+    }
+};
+
+const getModalColor = (type: string) => {
+    switch(type) {
+        case 'delayed': return 'red';
+        case 'ontrack': return 'green';
+        case 'completed': return 'purple';
+        default: return 'gray';
+    }
+};
 </script>

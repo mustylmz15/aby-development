@@ -12,7 +12,7 @@ import router from '@/router';
 app.use(router);
 
 // API interceptors (token kontrolü için) - app mount edilince başlat
-import { setupApiInterceptors, startTokenCheck } from '@/utils/api-interceptor';
+//import { setupApiInterceptors, startTokenCheck } from '@/utils/api-interceptor';
 
 // main app css
 import '@/assets/css/app.css';
