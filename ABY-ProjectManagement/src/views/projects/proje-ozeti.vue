@@ -336,7 +336,7 @@ const projects = ref([
         id: 'PSE8941',
         projeKodu: 'PSE8941',
         haneliKod: '7279',
-        projeAdi: 'Alaçatı GES',
+        projeAdi: 'Alaçatı RES',
         projeBaslangicTarihi: '2025-06-23',
         projeSuresi: '40',
         projeGecSureDurumu: 'Uygun Değil',

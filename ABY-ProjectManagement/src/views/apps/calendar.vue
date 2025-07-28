@@ -24,10 +24,16 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" @click="editEvent()">
-                        <icon-plus class="ltr:mr-2 rtl:ml-2" />
-                        Etkinlik Oluştur
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <div v-if="isLoading" class="flex items-center text-primary">
+                            <div class="animate-spin border-2 border-current border-r-transparent rounded-full w-4 h-4 mr-2"></div>
+                            Excel'den veriler yükleniyor...
+                        </div>
+                        <button type="button" class="btn btn-primary" @click="editEvent()" :disabled="isLoading">
+                            <icon-plus class="ltr:mr-2 rtl:ml-2" />
+                            Etkinlik Oluştur
+                        </button>
+                    </div>
                 </div>
                 <div class="calendar-wrapper">
                     <FullCalendar ref="calendar" :options="calendarOptions">
@@ -161,9 +167,13 @@
                                             </div>
                                         </div>
                                         <div class="flex justify-end items-center mt-8">
-                                            <button type="button" class="btn btn-outline-danger" @click="isAddEventModal = false">İptal</button>
-                                            <button v-if="params.id" type="button" class="btn btn-outline-warning ltr:ml-4 rtl:mr-4" @click="deleteEvent()">Sil</button>
-                                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                            <button type="button" class="btn btn-outline-danger" @click="isAddEventModal = false" :disabled="isLoading">İptal</button>
+                                            <button v-if="params.id" type="button" class="btn btn-outline-warning ltr:ml-4 rtl:mr-4" @click="deleteEvent()" :disabled="isLoading">
+                                                <div v-if="isLoading" class="animate-spin border-2 border-current border-r-transparent rounded-full w-4 h-4 mr-2 inline-block"></div>
+                                                Sil
+                                            </button>
+                                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" :disabled="isLoading">
+                                                <div v-if="isLoading" class="animate-spin border-2 border-current border-r-transparent rounded-full w-4 h-4 mr-2 inline-block"></div>
                                                 {{ params.id ? 'Etkinliği Güncelle' : 'Etkinlik Oluştur' }}
                                             </button>
                                         </div>
@@ -177,20 +187,19 @@
         </TransitionRoot>
     </div>
 </template>
-<script lang="ts" setup>
-    import { computed, onMounted, ref } from 'vue';
-    import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogOverlay } from '@headlessui/vue';
+<script setup lang="ts">
+    import { ref, computed, onMounted } from 'vue';
     import FullCalendar from '@fullcalendar/vue3';
     import dayGridPlugin from '@fullcalendar/daygrid';
     import timeGridPlugin from '@fullcalendar/timegrid';
     import interactionPlugin from '@fullcalendar/interaction';
+    import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogOverlay } from '@headlessui/vue';
     import Swal from 'sweetalert2';
     import { useMeta } from '@/composables/use-meta';
+    import { useExcel, type CalendarEvent } from '@/composables/use-excel';
 
-    import IconPlus from '@/components/icon/icon-plus.vue';
-    import IconX from '@/components/icon/icon-x.vue';
-
-    useMeta({ title: 'Takvim' });
+    // Excel composable'ını kullan
+    const { getCalendarEvents, saveCalendarEvent, updateCalendarEvent, deleteCalendarEvent, initializeCalendarExcel } = useExcel();
 
     const defaultParams = ref({
         id: null,
@@ -214,10 +223,12 @@
     const calendar: any = ref(null);
     const now = new Date();
     const events: any = ref([]);
+    const isLoading = ref(false);
     const calendarOptions = computed(() => {
         return {
             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
             initialView: 'dayGridMonth',
+            locale: 'tr', // Türkçe dil desteği
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -227,8 +238,44 @@
                 today: 'Bugün',
                 month: 'Ay',
                 week: 'Hafta',
-                day: 'Gün'
+                day: 'Gün',
+                list: 'Liste'
             },
+            dayHeaderFormat: { 
+                weekday: 'long' // Gün isimlerini tam olarak göster
+            },
+            eventTimeFormat: { // Zaman formatını düzelt
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false // 24 saat formatı kullan
+            },
+            slotLabelFormat: { // Zaman slotları formatı
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            },
+            // Türkçe gün isimleri
+            dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+            dayNamesShort: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'],
+            // Türkçe ay isimleri
+            monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+            monthNamesShort: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+            // Türkçe UI metinleri
+            allDayText: 'Tüm gün',
+            moreLinkText: function(num) {
+                return '+' + num + ' etkinlik';
+            },
+            noEventsText: 'Gösterilecek etkinlik yok',
+            titleFormat: { 
+                year: 'numeric', 
+                month: 'long' 
+            },
+            // Türkçe tarih formatı
+            weekText: 'Hafta',
+            weekTextLong: 'Hafta',
+            closeHint: 'Kapat',
+            timeHint: 'Zaman',
+            eventHint: 'Etkinlik',
             height: 'auto',
             editable: true,
             dayMaxEvents: true,
@@ -240,113 +287,79 @@
             select: (event: any) => {
                 editDate(event);
             },
-            events: events.value,
+            events: events.value, // Bu reactive olacak çünkü computed içinde
         };
     });
 
-    onMounted(() => {
-        getEvents();
+    onMounted(async () => {
+        await loadEvents();
     });
 
-    const getEvents = () => {
-        events.value = [
-            {
-                id: 1,
-                title: 'Tüm Gün Etkinliği',
-                start: now.getFullYear() + '-' + getMonth(now) + '-01T14:30:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-02T14:30:00',
-                className: 'danger',
-                description: 'Proje toplantısı ve sunum hazırlığı için ayrılan süre.',
-            },
-            {
-                id: 2,
-                title: 'Saha Ziyareti',
-                start: now.getFullYear() + '-' + getMonth(now) + '-07T19:30:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-08T14:30:00',
-                className: 'primary',
-                description: 'Müteahhit firmanın şantiye ziyareti ve denetleme işlemleri.',
-            },
-            {
-                id: 3,
-                title: 'Ürün Lansmanı',
-                start: now.getFullYear() + '-' + getMonth(now) + '-17T14:30:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-18T14:30:00',
-                className: 'info',
-                description: 'Yeni ürün lansmanı ve tanıtım etkinliği düzenlemesi.',
-            },
-            {
-                id: 4,
-                title: 'Toplantı',
-                start: now.getFullYear() + '-' + getMonth(now) + '-12T10:30:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-13T10:30:00',
-                className: 'danger',
-                description: 'Haftalık proje değerlendirme ve planlama toplantısı.',
-            },
-            {
-                id: 5,
-                title: 'Öğle Yemeği',
-                start: now.getFullYear() + '-' + getMonth(now) + '-12T15:00:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-13T15:00:00',
-                className: 'info',
-                description: 'Müşteri ile iş yemeği ve proje görüşmeleri.',
-            },
-            {
-                id: 6,
-                title: 'Konferans',
-                start: now.getFullYear() + '-' + getMonth(now) + '-12T21:30:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-13T21:30:00',
-                className: 'success',
-                description: 'Teknik konferans ve sektörel gelişmeler sunumu.',
-            },
-            {
-                id: 7,
-                title: 'Sosyal Etkinlik',
-                start: now.getFullYear() + '-' + getMonth(now) + '-12T05:30:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-13T05:30:00',
-                className: 'info',
-                description: 'Ekip motivasyonu için düzenlenen sosyal aktivite.',
-            },
-            {
-                id: 8,
-                title: 'Akşam Yemeği',
-                start: now.getFullYear() + '-' + getMonth(now) + '-12T20:00:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-13T20:00:00',
-                className: 'danger',
-                description: 'İş ortakları ile gala yemeği ve network etkinliği.',
-            },
-            {
-                id: 9,
-                title: 'Doğum Günü Partisi',
-                start: now.getFullYear() + '-' + getMonth(now) + '-27T20:00:00',
-                end: now.getFullYear() + '-' + getMonth(now) + '-28T20:00:00',
-                className: 'success',
-                description: 'Ekip üyesinin doğum günü kutlaması ve eğlence.',
-            },
-            {
-                id: 10,
-                title: 'Yeni Yetenek Etkinliği',
-                start: now.getFullYear() + '-' + getMonth(now, 1) + '-24T08:12:14',
-                end: now.getFullYear() + '-' + getMonth(now, 1) + '-27T22:20:20',
-                className: 'danger',
-                description: 'İnsan kaynakları yeni personel değerlendirme süreci.',
-            },
-            {
-                id: 11,
-                title: 'Diğer Etkinlik',
-                start: now.getFullYear() + '-' + getMonth(now, -1) + '-13T08:12:14',
-                end: now.getFullYear() + '-' + getMonth(now, -1) + '-16T22:20:20',
-                className: 'primary',
-                description: 'Genel amaçlı çok günlük etkinlik planlaması.',
-            },
-            {
-                id: 13,
-                title: 'Gelecek Etkinlik',
-                start: now.getFullYear() + '-' + getMonth(now, 1) + '-15T08:12:14',
-                end: now.getFullYear() + '-' + getMonth(now, 1) + '-18T22:20:20',
-                className: 'primary',
-                description: 'Gelecek ay planlanmış önemli proje miladı.',
-            },
-        ];
+    // Excel'den eventleri yükle
+    const loadEvents = async () => {
+        try {
+            isLoading.value = true;
+            console.log('=== CALENDAR LOAD EVENTS BAŞLADI ===');
+            console.log('Excel\'den calendar eventleri yükleniyor...');
+            
+            // Excel'i initialize et
+            console.log('Excel initialize ediliyor...');
+            await initializeCalendarExcel();
+            console.log('Excel initialize edildi');
+            
+            // Eventleri yükle
+            console.log('Calendar events yükleniyor...');
+            const calendarEvents = await getCalendarEvents();
+            console.log('Yüklenen calendar events:', calendarEvents);
+            
+            // FullCalendar formatına çevir
+            events.value = calendarEvents.map(event => {
+                // Tarihleri düzgün formatta parse et
+                let startDate = event.start;
+                let endDate = event.end;
+                
+                // Eğer tarih string formatında ise, doğru formata çevir
+                if (typeof startDate === 'string' && startDate) {
+                    // ISO 8601 formatında değilse düzelt
+                    if (!startDate.includes('T')) {
+                        startDate = startDate + 'T00:00:00';
+                    }
+                }
+                
+                if (typeof endDate === 'string' && endDate) {
+                    // ISO 8601 formatında değilse düzelt
+                    if (!endDate.includes('T')) {
+                        endDate = endDate + 'T23:59:59';
+                    }
+                }
+                
+                return {
+                    id: event.id,
+                    title: event.title,
+                    start: startDate,
+                    end: endDate,
+                    className: event.className,
+                    description: event.description,
+                    extendedProps: {
+                        description: event.description,
+                        createdAt: event.createdAt,
+                        updatedAt: event.updatedAt
+                    }
+                };
+            });
+            
+            console.log('Calendar events vue events\'e aktarıldı:', events.value.length);
+            console.log('Vue events:', events.value);
+            
+            // Events reactive olduğu için otomatik güncellenecek, refetchEvents gerekmez
+            
+        } catch (error) {
+            console.error('Calendar events yüklenirken hata:', error);
+            showMessage('Calendar events yüklenirken hata oluştu!', 'error');
+        } finally {
+            isLoading.value = false;
+            console.log('=== CALENDAR LOAD EVENTS BİTTİ ===');
+        }
     };
 
     const getMonth = (dt: Date, add: number = 0) => {
@@ -397,51 +410,66 @@
         return dt;
     };
 
-    const saveEvent = () => {
+    const saveEvent = async () => {
         if (!params.value.title) {
-            return true;
+            showMessage('Etkinlik başlığı gereklidir!', 'error');
+            return;
         }
         if (!params.value.start) {
-            return true;
+            showMessage('Başlangıç tarihi gereklidir!', 'error');
+            return;
         }
         if (!params.value.end) {
-            return true;
+            showMessage('Bitiş tarihi gereklidir!', 'error');
+            return;
         }
 
-        if (params.value.id) {
-            //update event
-            let event = events.value.find((d: any) => d.id == params.value.id);
-            if (event) {
-                event.title = params.value.title;
-                event.start = params.value.start;
-                event.end = params.value.end;
-                event.description = params.value.description;
-                event.className = params.value.type;
-            }
-        } else {
-            //add event
-            let maxEventId = 0;
-            if (events.value && events.value.length > 0) {
-                maxEventId = events.value.reduce((max: number, character: any) => (character.id > max ? character.id : max), events.value[0].id);
-            }
+        try {
+            isLoading.value = true;
+            console.log('=== SAVE EVENT BAŞLADI ===');
+            console.log('Parametreler:', params.value);
 
-            let event = {
-                id: maxEventId + 1,
-                title: params.value.title,
-                start: params.value.start,
-                end: params.value.end,
-                description: params.value.description,
-                className: params.value.type,
-            };
-            events.value.push(event);
+            if (params.value.id) {
+                // Güncelle
+                console.log('Event güncelleniyor:', params.value.id);
+                await updateCalendarEvent(params.value.id, {
+                    title: params.value.title,
+                    start: params.value.start,
+                    end: params.value.end,
+                    className: params.value.type,
+                    description: params.value.description
+                });
+
+                showMessage('Etkinlik başarıyla güncellendi.');
+            } else {
+                // Yeni ekle
+                console.log('Yeni event ekleniyor...');
+                const eventData = {
+                    title: params.value.title,
+                    start: params.value.start,
+                    end: params.value.end,
+                    className: params.value.type,
+                    description: params.value.description
+                };
+                console.log('API\'ye gönderilecek data:', eventData);
+                
+                const newEvent = await saveCalendarEvent(eventData);
+                console.log('API\'den dönen sonuç:', newEvent);
+
+                showMessage('Etkinlik başarıyla oluşturuldu.');
+            }
+            
+            // Sayfayı yenile - tüm eventleri tekrar yükle
+            await loadEvents();
+            
+            isAddEventModal.value = false;
+
+        } catch (error) {
+            console.error('Event kaydedilirken hata:', error);
+            showMessage('Etkinlik kaydedilirken hata oluştu!', 'error');
+        } finally {
+            isLoading.value = false;
         }
-        
-        // Calendar refresh
-        if (calendar.value) {
-            calendar.value.getApi().refetchEvents();
-        }
-        showMessage('Etkinlik başarıyla kaydedildi.');
-        isAddEventModal.value = false;
     };
 
     const startDateChange = (event: any) => {
@@ -454,14 +482,42 @@
         }
     };
 
-    const deleteEvent = () => {
-        if (params.value.id) {
-            events.value = events.value.filter((event: any) => event.id !== params.value.id);
-            if (calendar.value) {
-                calendar.value.getApi().refetchEvents();
+    const deleteEvent = async () => {
+        if (!params.value.id) {
+            return;
+        }
+
+        try {
+            // Onay al
+            const result = await Swal.fire({
+                title: 'Emin misiniz?',
+                text: 'Bu etkinliği silmek istediğinizden emin misiniz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Evet, Sil!',
+                cancelButtonText: 'İptal'
+            });
+
+            if (result.isConfirmed) {
+                isLoading.value = true;
+
+                // Excel'den sil
+                await deleteCalendarEvent(params.value.id);
+
+                showMessage('Etkinlik başarıyla silindi.');
+                isAddEventModal.value = false;
+                
+                // Sayfayı yenile - tüm eventleri tekrar yükle
+                await loadEvents();
             }
-            showMessage('Etkinlik başarıyla silindi.');
-            isAddEventModal.value = false;
+
+        } catch (error) {
+            console.error('Event silinirken hata:', error);
+            showMessage('Etkinlik silinirken hata oluştu!', 'error');
+        } finally {
+            isLoading.value = false;
         }
     };
 
@@ -478,5 +534,50 @@
             title: msg,
             padding: '10px 20px',
         });
+    };
+
+    // Tarih formatını Türkçe locale'a çeviren fonksiyon
+    const formatDateToTurkish = (dateString: string): string => {
+        if (!dateString) return '';
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            
+            // Türkçe locale ile formatla
+            return date.toLocaleString('tr-TR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        } catch (error) {
+            console.warn('Tarih formatlanırken hata:', error);
+            return dateString;
+        }
+    };
+
+    // Modal'da kullanılacak tarih format fonksiyonu
+    const formatDateForInput = (dateString: string): string => {
+        if (!dateString) return '';
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return '';
+            
+            // HTML datetime-local input formatı: YYYY-MM-DDTHH:MM
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        } catch (error) {
+            console.warn('Input tarih formatlanırken hata:', error);
+            return '';
+        }
     };
 </script>
