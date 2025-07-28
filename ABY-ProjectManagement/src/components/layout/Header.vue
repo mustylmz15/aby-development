@@ -184,9 +184,7 @@
                                                 class="flex items-center py-4 px-5 text-primary font-semibold group dark:text-gray-400 justify-center cursor-pointer"
                                                 @click="close()"
                                             >
-                                                <span class="group-hover:underline ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
-
-                                                <icon-arrow-left class="group-hover:translate-x-1 transition duration-300 ltr:ml-1 rtl:mr-1" />
+                                                 <icon-arrow-left class="group-hover:translate-x-1 transition duration-300 ltr:ml-1 rtl:mr-1" />
                                             </div>
                                         </li>
                                     </template>
@@ -224,9 +222,9 @@
                                 <ul class="!py-0 text-dark dark:text-white-dark w-[300px] sm:w-[350px] divide-y dark:divide-white/10">
                                     <li>
                                         <div class="flex items-center px-4 py-2 justify-between font-semibold">
-                                            <h4 class="text-lg">Notification</h4>
+                                            <h4 class="text-lg">Bildirimler</h4>
                                             <template v-if="notifications.length">
-                                                <span class="badge bg-primary/80" v-text="notifications.length + 'New'"></span>
+                                                <span class="badge bg-primary/80" v-text="notifications.length + ' Yeni'"></span>
                                             </template>
                                         </div>
                                     </li>
@@ -262,7 +260,7 @@
                                     <template v-if="notifications.length">
                                         <li>
                                             <div class="p-4">
-                                                <button class="btn btn-primary block w-full btn-small" @click="close()">Read All Notifications</button>
+                                                
                                             </div>
                                         </li>
                                     </template>
@@ -299,7 +297,7 @@
                                             </div>
                                             <div class="ltr:pl-4 rtl:pr-4 truncate">
                                                 <h4 class="text-base">
-                                                    John Doe<span class="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Pro</span>
+                                                    Yönetici<span class="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Pro</span>
                                                 </h4>
                                                 <a class="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white" href="javascript:;"
                                                     >johndoe@gmail.com</a
@@ -914,52 +912,21 @@
         {
             id: 1,
             profile: 'user-profile.jpeg',
-            message: '<strong class="text-sm mr-1">John Doe</strong>invite you to <strong>Prototyping</strong>',
-            time: '45 min ago',
+            message: '<strong class="text-sm mr-1">Yönetici </strong>proje takip sistemine <strong> hoşgeldiniz.</strong>',
+            time: '1 saat önce',
         },
-        {
-            id: 2,
-            profile: 'profile-34.jpeg',
-            message: '<strong class="text-sm mr-1">Adam Nolan</strong>mentioned you to <strong>UX Basics</strong>',
-            time: '9h Ago',
-        },
-        {
-            id: 3,
-            profile: 'profile-16.jpeg',
-            message: '<strong class="text-sm mr-1">Anna Morgan</strong>Upload a file',
-            time: '9h Ago',
-        },
+       
     ]);
 
     const messages = ref([
-        {
+      {
             id: 1,
             image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-success-light dark:bg-success text-success dark:text-success-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span>',
-            title: 'Congratulations!',
-            message: 'Your OS has been updated.',
-            time: '1hr',
+            title: 'Sistem Mesajları Burada Gösterilecek!',
+            message: 'Yönetici bildirimleri, sistem mesajları ve diğer önemli duyurular burada görüntülenecek.',
+             time: '*',
         },
-        {
-            id: 2,
-            image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-info-light dark:bg-info text-info dark:text-info-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>',
-            title: 'Did you know?',
-            message: 'You can switch between artboards.',
-            time: '2hr',
-        },
-        {
-            id: 3,
-            image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-danger-light dark:bg-danger text-danger dark:text-danger-light"> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>',
-            title: 'Something went wrong!',
-            message: 'Send Reposrt',
-            time: '2days',
-        },
-        {
-            id: 4,
-            image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-warning-light dark:bg-warning text-warning dark:text-warning-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">    <circle cx="12" cy="12" r="10"></circle>    <line x1="12" y1="8" x2="12" y2="12"></line>    <line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span>',
-            title: 'Warning',
-            message: 'Your password strength is low.',
-            time: '5days',
-        },
+        
     ]);
 
     onMounted(() => {
